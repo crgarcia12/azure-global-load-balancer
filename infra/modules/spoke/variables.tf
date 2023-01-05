@@ -12,15 +12,15 @@ variable "location" {
   type        = string
 }
 
-variable "resource_group_name" {
-  description = "RG Name"
+variable "ip_second_octet" {
+  description = "The second octet of the IP: 10.XXX.0.0/16"
   type        = string
 }
 
 ################################
-#         Hub Vnet
+#         Hub
 ################################
-variable "hub_vnet_rg_name" {
+variable "hub_vnet_name" {
   type        = string
 }
 
@@ -28,15 +28,6 @@ variable "hub_vnet_id" {
   type        = string
 }
 
-variable "hub_vnet_name" {
-  type        = string
-}
-
-################################
-#        Module params
-################################
-
-variable "ip_second_octet" {
-  description = "Region"
+variable "hub_rg_name" {
   type        = string
 }

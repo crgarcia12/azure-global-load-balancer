@@ -18,25 +18,8 @@ variable "resource_group_name" {
 }
 
 ################################
-#         Hub Vnet
+#         Vnet
 ################################
-variable "hub_vnet_rg_name" {
-  type        = string
-}
-
-variable "hub_vnet_id" {
-  type        = string
-}
-
-variable "hub_vnet_name" {
-  type        = string
-}
-
-################################
-#        Module params
-################################
-
-variable "ip_second_octet" {
-  description = "Region"
+variable "subnet_id" {
   type        = string
 }

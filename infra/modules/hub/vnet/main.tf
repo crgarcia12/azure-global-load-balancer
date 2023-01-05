@@ -5,13 +5,13 @@ locals {
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.prefix}-nsg"
   location            = var.location
-  resource_group_name = var.resourcegroup_name
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_virtual_network" "vnet" {
   name                = local.vnet_name
   location            = var.location
-  resource_group_name = var.resourcegroup_name
+  resource_group_name = var.resource_group_name
   address_space       = ["10.${var.ip_second_octet}.0.0/16"]
   
   subnet {
