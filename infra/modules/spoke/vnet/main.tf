@@ -30,6 +30,11 @@ resource "azurerm_virtual_network" "vnet" {
     address_prefix = "10.${var.ip_second_octet}.3.0/24"
   }
 
+  subnet {
+    name           = "aks"
+    address_prefix = "10.${var.ip_second_octet}.4.0/24"
+  }
+
   tags = {
     environmsent = "${var.location}"
   }
@@ -52,11 +57,19 @@ resource "azurerm_virtual_network_peering" "spoke-hub" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = local.vnet_name
   remote_virtual_network_id = var.hub_vnet_id
+
+  depends_on = [
+    azurerm_virtual_network.vnet
+  ]
 }
 
 resource "azurerm_virtual_network_peering" "hub-spoke" {
-  name                      = "hub2spoke"
+  name                      = "hub2spoke-${var.prefix}"
   resource_group_name       = var.hub_vnet_rg_name
   virtual_network_name      = var.hub_vnet_name
   remote_virtual_network_id = azurerm_virtual_network.vnet.id
+
+  depends_on = [
+    azurerm_virtual_network_peering.spoke-hub
+  ]
 }
