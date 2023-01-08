@@ -1,14 +1,11 @@
 output "vnet_vm_subnet_id" {
-  # value = data.azurerm_subnet.vnet_subnets_data.*.id
-  value = "${azurerm_virtual_network.vnet.id}/subnets/vms"
+  value = azurerm_subnet.vms.id
 }
 
 output "vnet_ars_subnet_id" {
-  # value = data.azurerm_subnet.vnet_subnets_data.*.id
-  value = "${azurerm_virtual_network.vnet.id}/subnets/RouteServerSubnet"
+  value = azurerm_subnet.RouteServerSubnet.id
 }
 
 output "vnet_aks_subnet_id" {
-  # value = data.azurerm_subnet.vnet_subnets_data.*.id
-  value = "${azurerm_virtual_network.vnet.id}/subnets/aks"
+  value = azurerm_subnet.aks.id
 }

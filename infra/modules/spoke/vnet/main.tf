@@ -26,6 +26,119 @@ resource "azurerm_network_security_rule" "nsg-ssh" {
   network_security_group_name = azurerm_network_security_group.nsg.name
 }
 
+resource "azurerm_network_security_rule" "nsg-out-all" {
+  name                        = "allow-out-all"
+  priority                    = 200
+  direction                   = "Outbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.nsg.name
+}
+
+resource "azurerm_network_security_rule" "nsg-in-all" {
+  name                        = "allow-in-all"
+  priority                    = 300
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.nsg.name
+}
+#################################################
+#     UDR
+#################################################
+resource "azurerm_route_table" "udr" {
+  name                          = "${var.prefix}-udr"
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
+  disable_bgp_route_propagation = false
+
+  route {
+    name           = "route1"
+    address_prefix = "10.1.0.0/16"
+    next_hop_type  = "VnetLocal"
+  }
+}
+
+#################################################
+#      Subnets
+#################################################
+resource "azurerm_subnet" "default" {
+  name                 = "default"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.${var.ip_second_octet}.1.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "default-nsg" {
+  subnet_id                 = azurerm_subnet.default.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
+resource "azurerm_subnet_route_table_association" "default-udr" {
+  subnet_id      = azurerm_subnet.default.id
+  route_table_id = azurerm_route_table.udr.id
+}
+///////////////////////////////////////////////////
+resource "azurerm_subnet" "vms" {
+  name                 = "vms"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.${var.ip_second_octet}.2.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "vms-nsg" {
+  subnet_id                 = azurerm_subnet.vms.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
+resource "azurerm_subnet_route_table_association" "vms-udr" {
+  subnet_id      = azurerm_subnet.vms.id
+  route_table_id = azurerm_route_table.udr.id
+}
+///////////////////////////////////////////////////
+resource "azurerm_subnet" "RouteServerSubnet" {
+  name                 = "RouteServerSubnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.${var.ip_second_octet}.3.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "RouteServerSubnet-nsg" {
+  subnet_id                 = azurerm_subnet.RouteServerSubnet.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
+resource "azurerm_subnet_route_table_association" "RouteServerSubnet-udr" {
+  subnet_id      = azurerm_subnet.RouteServerSubnet.id
+  route_table_id = azurerm_route_table.udr.id
+}
+///////////////////////////////////////////////////
+resource "azurerm_subnet" "aks" {
+  name                 = "aks"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.${var.ip_second_octet}.4.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "aks-nsg" {
+  subnet_id                 = azurerm_subnet.aks.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
+resource "azurerm_subnet_route_table_association" "aks-udr" {
+  subnet_id      = azurerm_subnet.aks.id
+  route_table_id = azurerm_route_table.udr.id
+}
 #################################################
 #      VNET
 #################################################
@@ -36,43 +149,10 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = var.resource_group_name
   address_space       = ["10.${var.ip_second_octet}.0.0/16"]
   
-  subnet {
-    name           = "default"
-    address_prefix = "10.${var.ip_second_octet}.1.0/24"
-  }
-
-  subnet {
-    name           = "vms"
-    address_prefix = "10.${var.ip_second_octet}.2.0/24"
-    security_group = azurerm_network_security_group.nsg.id
-  }
-
-  subnet {
-    name           = "RouteServerSubnet"
-    address_prefix = "10.${var.ip_second_octet}.3.0/24"
-  }
-
-  subnet {
-    name           = "aks"
-    address_prefix = "10.${var.ip_second_octet}.4.0/24"
-  }
-
   tags = {
     environmsent = "${var.location}"
   }
 }
-
-# data "azurerm_virtual_network" "vnet_data" {
-#   name                 = local.vnet_name
-#   resource_group_name  = var.resource_group_name
-# }
-
-# data "azurerm_subnet" "vnet_subnets_data" {
-#     name                 = data.azurerm_virtual_network.vnet_data.subnets[count.index]
-#     virtual_network_name = data.azurerm_virtual_network.vnet_data.name
-#     resource_group_name  = data.azurerm_virtual_network.vnet_data.resource_group_name
-#     count                = length(data.azurerm_virtual_network.vnet_data.subnets)
-# }
 
 resource "azurerm_virtual_network_peering" "spoke-hub" {
   name                      = "spoke2hub"
