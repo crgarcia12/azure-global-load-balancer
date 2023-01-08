@@ -72,6 +72,7 @@ resource "azurerm_route_table" "udr" {
 #################################################
 #      Subnets
 #################################################
+/////////////    Default    /////////////////////
 resource "azurerm_subnet" "default" {
   name                 = "default"
   resource_group_name  = var.resource_group_name
@@ -88,7 +89,7 @@ resource "azurerm_subnet_route_table_association" "default-udr" {
   subnet_id      = azurerm_subnet.default.id
   route_table_id = azurerm_route_table.udr.id
 }
-///////////////////////////////////////////////////
+////////////     VMS    /////////////////////////
 resource "azurerm_subnet" "vms" {
   name                 = "vms"
   resource_group_name  = var.resource_group_name
@@ -105,7 +106,7 @@ resource "azurerm_subnet_route_table_association" "vms-udr" {
   subnet_id      = azurerm_subnet.vms.id
   route_table_id = azurerm_route_table.udr.id
 }
-///////////////////////////////////////////////////
+////////////    RouteServer    //////////////////
 resource "azurerm_subnet" "RouteServerSubnet" {
   name                 = "RouteServerSubnet"
   resource_group_name  = var.resource_group_name
@@ -113,16 +114,7 @@ resource "azurerm_subnet" "RouteServerSubnet" {
   address_prefixes     = ["10.${var.ip_second_octet}.3.0/24"]
 }
 
-resource "azurerm_subnet_network_security_group_association" "RouteServerSubnet-nsg" {
-  subnet_id                 = azurerm_subnet.RouteServerSubnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "azurerm_subnet_route_table_association" "RouteServerSubnet-udr" {
-  subnet_id      = azurerm_subnet.RouteServerSubnet.id
-  route_table_id = azurerm_route_table.udr.id
-}
-///////////////////////////////////////////////////
+////////////     AKS    /////////////////////
 resource "azurerm_subnet" "aks" {
   name                 = "aks"
   resource_group_name  = var.resource_group_name

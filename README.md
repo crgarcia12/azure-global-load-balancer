@@ -1,5 +1,26 @@
 # azure-static-app
 
+## Run terraform
+```
+az upgrade
+az extension add --name aks-preview
+az extension update --name aks-preview
+
+az login
+az account set --subscription "..." 
+
+az feature register --name CiliumDataplanePreview --namespace Microsoft.ContainerService
+az feature show --name CiliumDataplanePreview --namespace  Microsoft.ContainerService --output table
+
+az feature register --name AzureOverlayPreview --namespace Microsoft.ContainerService
+az feature show --name AzureOverlayPreview --namespace  Microsoft.ContainerService --output table
+
+az provider register -n Microsoft.ContainerService
+
+terraform init
+terraform apply -auto-approve
+```
+
 
 ## VM script
 ``` bash

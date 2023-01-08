@@ -1,14 +1,15 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "${var.prefix}-aks"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  dns_prefix          = "${var.prefix}-aks"
+  name                      = "${var.prefix}-aks"
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  dns_prefix                = "${var.prefix}-aks"
+  automatic_channel_upgrade = "stable"
 
   default_node_pool {
-    name       = "default"
-    node_count = 1
-    vm_size    = "Standard_D2_v2"
-    vnet_subnet_id = var.subnet_id
+    name            = "default"
+    node_count      = 1
+    vm_size         = "Standard_D2_v2"
+    vnet_subnet_id  = var.subnet_id
   }
 
   identity {
@@ -21,8 +22,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin = "kubenet"
-    load_balancer_sku = "standard"
+    network_plugin      = "azure"
+    network_plugin_mode = "Overlay"
+    ebpf_data_plane     = "cilium"
+    load_balancer_sku   = "standard"
   }
   
   tags = {
