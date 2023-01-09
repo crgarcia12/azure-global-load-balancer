@@ -69,3 +69,15 @@ sudo systemctl restart haproxy
 ## Start ExaBGP
 exabgp ./exabgp-conf.ini
 ```
+
+# Build the demo app
+```
+cd app\src\demo-app
+
+docker login -u crgarcia
+docker build -t crgarcia/demoapp:0.1.0 -f .\demo-app\Dockerfile .
+docker push crgarcia/demoapp:0.1.0
+
+kubectl apply -f ..\..\deployment\deployment.yaml
+```
+
