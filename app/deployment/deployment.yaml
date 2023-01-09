@@ -23,7 +23,22 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: demoapp
+  name: internal-demoapp
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: demoapp
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: public-demoapp
 spec:
   type: LoadBalancer
   selector:
