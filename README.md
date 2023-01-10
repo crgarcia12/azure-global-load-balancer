@@ -1,5 +1,7 @@
 # azure-static-app
 
+![architecture diagram](readme-media/architecture.png)
+
 ## Run terraform
 ```
 az group create --name crgar-glb-terraform-rg --location eastus
@@ -28,6 +30,17 @@ terraform init
 terraform apply -auto-approve
 ```
 
+## Setup GitHub actions
+```
+az ad sp create-for-rbac --name "crgar-glb-githubaction" --role contributor --scopes /subscriptions/{subscriptionid} --sdk-auth
+
+# Create the following GH secrets
+AZURE_CLIENT_ID = clientId
+AZURE_CLIENT_SECRET = clientSecret
+AZURE_TENANT_ID = tenantId
+MVP_SUBSCRIPTION = subscriptionId
+
+```
 
 ## VM script
 ``` bash
