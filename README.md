@@ -1,4 +1,4 @@
-# azure-static-app
+# Global load balancer design in Azure
 
 ![architecture diagram](readme-media/architecture.png)
 
