@@ -26,6 +26,6 @@ resource "azurerm_virtual_network" "vnet" {
   }
 
   tags = {
-    environmsent = "${var.location}"
+    environment = var.location
   }
 }
