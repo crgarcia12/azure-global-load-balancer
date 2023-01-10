@@ -5,6 +5,12 @@ terraform {
       version = "3.37.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "crgar-glb-terraform-rg"
+    storage_account_name = "crgarglbterraformstor"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
 }
 provider "azurerm" {
   features {}
