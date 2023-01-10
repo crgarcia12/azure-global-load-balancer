@@ -21,13 +21,13 @@ variable "ip_second_octet" {
 #         Hub
 ################################
 variable "hub_vnet_name" {
-  type        = string
+  type = string
 }
 
 variable "hub_vnet_id" {
-  type        = string
+  type = string
 }
 
 variable "hub_rg_name" {
-  type        = string
+  type = string
 }

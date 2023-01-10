@@ -21,15 +21,15 @@ variable "resource_group_name" {
 #         Hub Vnet
 ################################
 variable "hub_vnet_rg_name" {
-  type        = string
+  type = string
 }
 
 variable "hub_vnet_id" {
-  type        = string
+  type = string
 }
 
 variable "hub_vnet_name" {
-  type        = string
+  type = string
 }
 
 ################################

@@ -4,14 +4,14 @@ resource "azurerm_resource_group" "spoke_rg" {
 }
 
 module "spoke_vnet" {
-  source  = "./vnet"
-  prefix = "${var.prefix}"
-  location = var.location
-  ip_second_octet = var.ip_second_octet
+  source              = "./vnet"
+  prefix              = var.prefix
+  location            = var.location
+  ip_second_octet     = var.ip_second_octet
   resource_group_name = azurerm_resource_group.spoke_rg.name
-  hub_vnet_rg_name = var.hub_rg_name
-  hub_vnet_id = var.hub_vnet_id
-  hub_vnet_name = var.hub_vnet_name
+  hub_vnet_rg_name    = var.hub_rg_name
+  hub_vnet_id         = var.hub_vnet_id
+  hub_vnet_name       = var.hub_vnet_name
 }
 
 # module "spoke_vm" {
@@ -23,17 +23,17 @@ module "spoke_vnet" {
 # }
 
 module "spoke_ars" {
-  source  = "./routeserver"
-  prefix = "${var.prefix}"
-  location = var.location
+  source              = "./routeserver"
+  prefix              = var.prefix
+  location            = var.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
-  subnet_id = module.spoke_vnet.vnet_ars_subnet_id
+  subnet_id           = module.spoke_vnet.vnet_ars_subnet_id
 }
 
 module "aks" {
-  source = "./aks"
-  prefix = "${var.prefix}"
-  location = var.location
+  source              = "./aks"
+  prefix              = var.prefix
+  location            = var.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
-  subnet_id = module.spoke_vnet.vnet_aks_subnet_id
+  subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
 }

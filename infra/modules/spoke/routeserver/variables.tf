@@ -21,5 +21,5 @@ variable "resource_group_name" {
 #         Vnet
 ################################
 variable "subnet_id" {
-  type        = string
+  type = string
 }
