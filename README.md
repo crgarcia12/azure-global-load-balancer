@@ -90,7 +90,7 @@ sudo systemctl restart haproxy
 exabgp ./exabgp-conf.ini
 ```
 
-# Build the demo app
+## Build the demo app
 ```
 cd app\src\demo-app
 
@@ -101,3 +101,7 @@ docker push crgarcia/demoapp:0.1.0
 kubectl apply -f ..\..\deployment\deployment.yaml
 ```
 
+## Approve the VM plan from the marketplace
+```
+az vm image accept-terms --urn eurolinuxspzoo1620639373013:centos-8-5-free:centos-8-5-free:latest
+```
