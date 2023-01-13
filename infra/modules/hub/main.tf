@@ -32,5 +32,5 @@ module "hub_fw" {
   prefix              = var.prefix
   location            = var.location
   resource_group_name = azurerm_resource_group.hub_rg.name
-  fw_subnet_id        = module.hub_vnet.vnet_fw_subnet_id
+  subnet_id           = module.hub_vnet.vnet_fw_subnet_id
 }

@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "vm_ip" {
 }
 
 resource "azurerm_network_interface" "vm_nic" {
-  name                = "${var.prefix}-nic"
+  name                = "${var.prefix}-vm-nic"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -40,14 +40,23 @@ resource "azurerm_virtual_machine" "vm" {
     publisher = "eurolinuxspzoo1620639373013"
     offer     = "centos-8-5-free"
     sku       = "centos-8-5-free"
+    version   = "latest"
+  }
+
+  plan {
+    name      = "centos-8-5-free"
+    publisher = "eurolinuxspzoo1620639373013"
+    product   = "centos-8-5-free"
   }
 
   storage_os_disk {
-    name              = "${var.prefix}-disk"
+    name              = "${var.prefix}-vm-disk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
+
   os_profile {
     computer_name  = "hostname"
     admin_username = "adminuser"

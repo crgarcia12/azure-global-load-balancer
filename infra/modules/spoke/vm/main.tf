@@ -35,12 +35,19 @@ resource "azurerm_virtual_machine" "vm" {
   #   sku       = "18.04-LTS"
   #   version   = "latest"
   # }
-
   storage_image_reference {
     publisher = "eurolinuxspzoo1620639373013"
     offer     = "centos-8-5-free"
     sku       = "centos-8-5-free"
+    version   = "latest"
   }
+
+  plan {
+    name      = "centos-8-5-free"
+    publisher = "eurolinuxspzoo1620639373013"
+    product   = "centos-8-5-free"
+  }
+
 
   storage_os_disk {
     name              = "${var.prefix}-disk"
@@ -48,6 +55,7 @@ resource "azurerm_virtual_machine" "vm" {
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
   os_profile {
     computer_name  = "hostname"
     admin_username = "adminuser"

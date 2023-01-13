@@ -16,7 +16,7 @@ resource "azurerm_firewall" "hub_fw" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = var.fw_subnet_id
+    subnet_id            = var.subnet_id
     public_ip_address_id = azurerm_public_ip.hub_fw_ip.id
   }
 }
