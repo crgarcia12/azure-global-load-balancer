@@ -21,17 +21,13 @@ variable "prefix" {
   default = "crgar-glb"
 }
 
-resource "azurerm_resource_group" "hub_rg" {
-  name     = "${var.prefix}-hub-rg"
+#################################
+#           Hub
+#################################
+module "hub" {
+  source   = "./modules/hub"
+  prefix   = "${var.prefix}-hub"
   location = "eastus"
-}
-
-module "hub_vnet" {
-  source              = "./modules/hub/vnet"
-  prefix              = "${var.prefix}-hub"
-  location            = "eastus"
-  ip_second_octet     = "200"
-  resource_group_name = azurerm_resource_group.hub_rg.name
 }
 
 #################################
@@ -42,12 +38,12 @@ module "spoke_weu" {
   prefix          = "${var.prefix}-weu"
   location        = "eastus"
   ip_second_octet = "210"
-  hub_vnet_name   = module.hub_vnet.vnet_name
-  hub_vnet_id     = module.hub_vnet.vnet_id
-  hub_rg_name     = azurerm_resource_group.hub_rg.name
+  hub_vnet_name   = module.hub.hub_vnet_name
+  hub_vnet_id     = module.hub.hub_vnet_id
+  hub_rg_name     = module.hub.hub_rg_name
 
   depends_on = [
-    module.hub_vnet
+    module.hub
   ]
 }
 
