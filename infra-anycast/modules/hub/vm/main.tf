@@ -7,11 +7,11 @@ resource "azurerm_public_ip" "vm_ip" {
 }
 
 resource "azurerm_network_interface" "vm_nic" {
-  name                = "${var.prefix}-vm-nic"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  name                  = "${var.prefix}-vm-nic"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  enable_ip_forwarding  = true
   
-  enable_ip_forwarding            = true
   ip_configuration {
     name                          = "${var.prefix}-ip"
     subnet_id                     = var.subnet_id
