@@ -47,7 +47,7 @@ module "spoke_weu" {
   ]
 }
 
-module "spoke_weu" {
+module "spoke_eus" {
   source          = "./modules/spoke"
   prefix          = "${var.prefix}-eus"
   location        = "eastus"
