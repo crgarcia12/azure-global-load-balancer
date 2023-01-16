@@ -10,7 +10,7 @@ resource "azurerm_network_interface" "vm_nic" {
   name                  = "${var.prefix}-vm-nic"
   location              = var.location
   resource_group_name   = var.resource_group_name
-  
+
   ip_configuration {
     name                          = "${var.prefix}-ip"
     subnet_id                     = var.subnet_id
@@ -55,7 +55,6 @@ resource "azurerm_virtual_machine" "vm" {
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
-
 
   os_profile {
     computer_name  = "hostname"
