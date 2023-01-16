@@ -154,7 +154,8 @@ resource "azurerm_virtual_network_peering" "spoke-hub" {
   use_remote_gateways       = true
 
   depends_on = [
-    azurerm_virtual_network.vnet
+    azurerm_virtual_network.vnet,
+    azurerm_virtual_network_peering.hub-spoke
   ]
 }
 
