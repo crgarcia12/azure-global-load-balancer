@@ -47,12 +47,16 @@ module "spoke_weu" {
   ]
 }
 
-# module "spoke_neu" {
-#   source = "./modules/spoke"
-#   prefix = "${var.prefix}-neu"
-#   location = "northeurope"
-#   ip_second_octet = "220"
-#   hub_vnet_name = module.hub_vnet.vnet_name
-#   hub_vnet_id = module.hub_vnet.vnet_id
-#   hub_rg_name = azurerm_resource_group.hub_rg.name
-# }
+module "spoke_weu" {
+  source          = "./modules/spoke"
+  prefix          = "${var.prefix}-eus"
+  location        = "eastus"
+  ip_second_octet = "220"
+  hub_vnet_name   = module.hub.hub_vnet_name
+  hub_vnet_id     = module.hub.hub_vnet_id
+  hub_rg_name     = module.hub.hub_rg_name
+
+  depends_on = [
+    module.hub
+  ]
+}
