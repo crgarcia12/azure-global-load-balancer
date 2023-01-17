@@ -1,7 +1,9 @@
 name: 'Terraform'
 
 on:
-  workflow_dispatch
+  workflow_dispatch:  
+    branches:
+    - main
   push:
     branches:
     - main
