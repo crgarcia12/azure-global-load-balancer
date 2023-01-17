@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "aks-msi" {
 
 resource "azurerm_role_assignment" "aks-msi-assignment" {
   scope                = var.resource_group_id
-  role_definition_name = "Reader"
+  role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.aks-msi.principal_id
 }
 
