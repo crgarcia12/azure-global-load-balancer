@@ -1,7 +1,7 @@
 resource "azurerm_user_assigned_identity" "aks-msi" {
-  name                      = "${var.prefix}-aks-msi"
-  location                  = var.location
-  resource_group_name       = var.resource_group_name
+  name                = "${var.prefix}-aks-msi"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_role_assignment" "aks-msi-assignment" {
