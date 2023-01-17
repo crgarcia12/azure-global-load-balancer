@@ -4,11 +4,13 @@
 
 ## Run terraform
 ```
-az group create --name crgar-glb-terraform-rg --location eastus
-az storage account create --resource-group crgar-glb-terraform-rg --name crgarglbterraformstor --sku Standard_LRS --encryption-services blob
-az storage container create --name tfstate --account-name crgarglbterraformstor
+$resourceGroup = "crgar-fd-glb-terraform-rg"
+$storageName = "crgarfdglbterraformstor"
+az group create --name $resourceGroup --location eastus
+az storage account create --resource-group $resourceGroup --name $storageName --sku Standard_LRS --encryption-services blob
+az storage container create --name tfstate --account-name $storageName
 
-$account_key=$(az storage account keys list --resource-group crgar-glb-terraform-rg --account-name crgarglbterraformstor --query '[0].value' -o tsv)
+$account_key=$(az storage account keys list --resource-group $resourceGroup --account-name $storageName --query '[0].value' -o tsv)
 $env:ARM_ACCESS_KEY=$account_key
 
 az upgrade

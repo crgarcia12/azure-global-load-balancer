@@ -27,5 +27,6 @@ module "aks" {
   prefix              = var.prefix
   location            = var.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
+  resource_group_id   = azurerm_resource_group.spoke_rg.id
   subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
 }
