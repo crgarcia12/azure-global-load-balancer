@@ -1,5 +1,5 @@
 name: 'Terraform'
- 
+
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     paths:
     - infra-anycast/**
   pull_request:
- 
+
 jobs:
   terraform:
     name: 'Terraform'
@@ -18,45 +18,45 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
     runs-on: ubuntu-latest
     environment: production
- 
+
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
- 
+
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
- 
+
     - name: 'Terraform Format'
-     uses: hashicorp/terraform-github-actions@master
-     with:
-       tf_actions_version: 0.14.8
-       tf_actions_subcommand: 'fmt'
-       tf_actions_working_dir: "./infra-anycast"
-         
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'fmt'
+        tf_actions_working_dir: "./infra-anycast"
+
     - name: 'Terraform Init'
       uses: hashicorp/terraform-github-actions@master
       with:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'init'
         tf_actions_working_dir: "./infra-anycast"
- 
+
     - name: 'Terraform Validate'
       uses: hashicorp/terraform-github-actions@master
       with:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'validate'
         tf_actions_working_dir: "./infra-anycast"
-         
+
     - name: 'Terraform Plan'
       uses: hashicorp/terraform-github-actions@master
       with:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'plan'
         tf_actions_working_dir: "./infra-anycast"
- 
+
     # - name: Terraform Apply
     #   if: github.ref == 'refs/heads/main'
     #   uses: hashicorp/terraform-github-actions@master
