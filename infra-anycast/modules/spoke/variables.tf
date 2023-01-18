@@ -17,6 +17,17 @@ variable "ip_second_octet" {
   type        = string
 }
 
+variable "aks_network_plugin_mode" {
+  description = "network plugin mode"
+  type        = string
+  default     = "Overlay"
+}
+
+variable "aks_ebpf_data_plane" {
+  description = "ebpf_data_plane"
+  type        = string
+  default     = "cilium"
+}
 ################################
 #         Hub
 ################################

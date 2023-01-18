@@ -38,8 +38,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   network_profile {
     network_plugin      = "azure"
-    network_plugin_mode = "Overlay"
-    ebpf_data_plane     = "cilium"
+    network_plugin_mode = var.network_plugin_mode
+    ebpf_data_plane     = var.ebpf_data_plane
     load_balancer_sku   = "standard"
   }
 
