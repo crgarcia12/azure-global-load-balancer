@@ -34,7 +34,8 @@ terraform apply -auto-approve
 
 ## Setup GitHub actions
 ```
-az ad sp create-for-rbac --name "crgar-glb-githubaction" --role contributor --scopes /subscriptions/{subscriptionid} --sdk-auth
+# You need to be owner to do role assignments for the AKS MSI to the VNet 
+az ad sp create-for-rbac --name "crgar-glb-githubaction" --role owner --scopes /subscriptions/{subscriptionid} --sdk-auth
 
 # Create the following GH secrets
 AZURE_CLIENT_ID = clientId
