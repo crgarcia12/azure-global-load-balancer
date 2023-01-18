@@ -1,4 +1,5 @@
-# Global load balancer design in Azure
+# Global load balancer architecture design in Azure
+[![Terraform](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml/badge.svg)](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml)
 
 ![architecture diagram](readme-media/architecture.png)
 
