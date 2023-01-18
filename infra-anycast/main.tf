@@ -42,6 +42,7 @@ module "spoke_weu" {
   hub_vnet_name   = module.hub.hub_vnet_name
   hub_vnet_id     = module.hub.hub_vnet_id
   hub_rg_name     = module.hub.hub_rg_name
+  fw_vip          = module.hub.fw_vip
 
   depends_on = [
     module.hub
@@ -56,6 +57,7 @@ module "spoke_eus" {
   hub_vnet_name   = module.hub.hub_vnet_name
   hub_vnet_id     = module.hub.hub_vnet_id
   hub_rg_name     = module.hub.hub_rg_name
+  fw_vip          = module.hub.fw_vip
 
   depends_on = [
     module.hub
@@ -87,6 +89,7 @@ module "spoke_weu_s1" {
   hub_rg_name             = module.hub_weu.hub_rg_name
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
+  fw_vip                  = module.hub_weu.fw_vip
 
   depends_on = [
     module.hub_weu
@@ -103,6 +106,7 @@ module "spoke_weu_s2" {
   hub_rg_name             = module.hub_weu.hub_rg_name
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
+  fw_vip                  = module.hub_weu.fw_vip
 
   depends_on = [
     module.hub_weu

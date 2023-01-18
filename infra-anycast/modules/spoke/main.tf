@@ -12,6 +12,7 @@ module "spoke_vnet" {
   hub_vnet_rg_name    = var.hub_rg_name
   hub_vnet_id         = var.hub_vnet_id
   hub_vnet_name       = var.hub_vnet_name
+  fw_vip              = var.fw_vip
 }
 
 module "spoke_vm" {

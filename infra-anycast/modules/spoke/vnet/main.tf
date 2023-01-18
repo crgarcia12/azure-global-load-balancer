@@ -63,9 +63,10 @@ resource "azurerm_route_table" "udr" {
   disable_bgp_route_propagation = false
 
   route {
-    name           = "route1"
-    address_prefix = "10.1.0.0/16"
-    next_hop_type  = "VnetLocal"
+    name                    = "route1"
+    address_prefix          = "6.6.6.6/32"
+    next_hop_type           = "VirtualAppliance"
+    next_hop_in_ip_address  = var.fw_vip
   }
 }
 
