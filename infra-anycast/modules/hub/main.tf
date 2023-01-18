@@ -7,7 +7,7 @@ module "hub_vnet" {
   source              = "./vnet"
   prefix              = var.prefix
   location            = var.location
-  ip_second_octet     = "200"
+  ip_second_octet     = var.ip_second_octet
   resource_group_name = azurerm_resource_group.hub_rg.name
 }
 
