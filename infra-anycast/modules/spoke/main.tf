@@ -30,5 +30,5 @@ module "aks" {
   resource_group_id   = azurerm_resource_group.spoke_rg.id
   subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
   network_plugin_mode = var.aks_network_plugin_mode
-  ebpf_data_plane = var.aks_ebpf_data_plane
+  ebpf_data_plane     = var.aks_ebpf_data_plane
 }
