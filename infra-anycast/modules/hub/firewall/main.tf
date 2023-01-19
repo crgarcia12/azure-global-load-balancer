@@ -33,6 +33,7 @@ resource "azurerm_firewall_network_rule_collection" "any-to-any-test" {
 
     source_addresses = [
       "10.0.0.0/8",
+      "6.6.6.6/32"
     ]
 
     destination_ports = [
@@ -40,7 +41,8 @@ resource "azurerm_firewall_network_rule_collection" "any-to-any-test" {
     ]
 
     destination_addresses = [
-      "10.0.0.0/8"
+      "10.0.0.0/8",
+      "6.6.6.6/32"
     ]
 
     protocols = [
