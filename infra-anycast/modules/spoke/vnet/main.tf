@@ -60,7 +60,7 @@ resource "azurerm_route_table" "udr" {
   name                          = "${var.prefix}-udr"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  disable_bgp_route_propagation = false
+  disable_bgp_route_propagation = true
 
   route {
     name                   = "route1"
