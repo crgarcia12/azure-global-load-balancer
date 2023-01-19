@@ -103,7 +103,17 @@ docker login -u crgarcia
 docker build -t crgarcia/demoapp:0.5.0 -f .\demo-app\Dockerfile .
 docker push crgarcia/demoapp:0.5.0
 
-kubectl apply -f ..\..\deployment\deployment.yaml
+$clusters = @(
+	@("crgar-glb-eus-rg","crgar-glb-eus-aks"),
+	@("crgar-glb-weu-rg","crgar-glb-weu-aks"),
+	@("crgar-glb-weu-s1-rg","crgar-glb-weu-s1-aks"),
+	@("crgar-glb-weu-s2-rg","crgar-glb-weu-s2-aks")
+)
+
+$clusters | % {
+	az aks get-credentials -g $_[0] -n $_[1]
+	kubectl apply -f ..\..\deployment\deployment.yaml
+}
 
 curl <demoapp k8s-service ip>:8080/api/envs
 ```
