@@ -1,7 +1,18 @@
 # Global load balancer architecture design in Azure
+
+There are two proposals:
+
+# Proposal 1: BGP based solution
 [![Terraform](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml/badge.svg)](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml)
 
-![architecture diagram](readme-media/architecture.png)
+![architecture diagram](readme-media/architecture-bgp.png)
+
+
+# Proposal 2: Front Door based solution
+![architecture diagram](readme-media/architecture-frontdoor.png)
+
+
+# Proposal 1: BGP - under development
 
 ## Run terraform
 ```
@@ -48,50 +59,36 @@ MVP_SUBSCRIPTION = subscriptionId
 
 ## VM script
 ``` bash
-# SSH to NVA
-sudo apt --assume-yes update
-sudo apt --assume-yes upgrade
-sudo apt --assume-yes install exabgp
-sudo apt --assume-yes install haproxy
-# Loopback IF
-sudo ifconfig lo:9 9.9.9.9 netmask 255.255.255.255 up
-# ExaBGP config
-cat > exabgp-conf.ini << EOF
-neighbor 172.16.159.4 {
-	router-id 172.16.156.70;
-	local-address 172.16.156.70;
-	local-as 65010;
-	peer-as 65515;
-	static {
-	route 9.9.9.9/32 next-hop 172.16.156.70 as-path [];
-	}
-}
-neighbor 172.16.159.5 {
-	router-id 172.16.156.70;
-	local-address 172.16.156.70;
-	local-as 65010;
-	peer-as 65515;
-	static {
-	route 9.9.9.9/32 next-hop 172.16.156.70;
-	}
-}
-EOF
-## HAProxy config
-sudo chmod 777 /etc/haproxy/haproxy.cfg
-cat >> /etc/haproxy/haproxy.cfg << EOF
-frontend http_front
-        bind *:80
-        stats uri /haproxy?stats
-        default_backend http_back
-backend http_back
-        balance roundrobin
-        server backend01 172.16.156.69:80 check
-EOF
+14:25
 
-sudo systemctl restart haproxy
+# Install frr
+sudo dnf install frr
+vi /etc/frr/daemons
+bgpd=yes (bgp daemon)
+systemctl enable frr --now
 
-## Start ExaBGP
-exabgp ./exabgp-conf.ini
+# Enter Frr config console
+sudo vtysh
+
+## See running config
+show
+router bgp 65111 <- autonomous system number
+...
+ebgp-multihop-2
+65515
+....
+network 6.6.6.6/32
+
+
+# fix destination
+sudo iptables -t nat -L -> -t = which table  -L= List
+DNAT all -- anywhere 6.6.6.6 to:10.220.4.5 <- when you see 6.6.6.6 replace the to to the AKS LB
+
+# take a look at what is going on
+sudo tcpdump -i eth0 tcp port 8080 -nnn
+
+# now we need to replace the 
+
 ```
 
 ## Build the demo app
