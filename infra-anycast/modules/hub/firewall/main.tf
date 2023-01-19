@@ -20,3 +20,33 @@ resource "azurerm_firewall" "hub_fw" {
     public_ip_address_id = azurerm_public_ip.hub_fw_ip.id
   }
 }
+
+resource "azurerm_firewall_network_rule_collection" "any-to-any-test" {
+  name                = "netCollection1"
+  azure_firewall_name = azurerm_firewall.hub_fw.name
+  resource_group_name = var.resource_group_name
+  priority            = 100
+  action              = "Allow"
+
+  rule {
+    name = "testrule"
+
+    source_addresses = [
+      "10.0.0.0/8",
+      "6.6.6.6/32"
+    ]
+
+    destination_ports = [
+      "*",
+    ]
+
+    destination_addresses = [
+      "10.0.0.0/8",
+      "6.6.6.6/32"
+    ]
+
+    protocols = [
+      "Any"
+    ]
+  }
+}
