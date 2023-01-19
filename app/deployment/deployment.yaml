@@ -1,3 +1,32 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-service-access
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: read-services
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-services
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: read-services
+subjects:
+- kind: ServiceAccount
+  name: pod-service-access
+  namespace: default
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,11 +43,33 @@ spec:
       labels:
         app: demoapp
     spec:
+      serviceAccount: pod-service-access
       containers:
       - name: demoapp
-        image: crgarcia/demoapp:0.1.0
+        image: crgarcia/demoapp:0.5.0
         ports:
         - containerPort: 80
+        env:
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
 ---
 apiVersion: v1
 kind: Service

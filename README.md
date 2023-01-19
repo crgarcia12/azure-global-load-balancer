@@ -99,10 +99,13 @@ exabgp ./exabgp-conf.ini
 cd app\src\demo-app
 
 docker login -u crgarcia
-docker build -t crgarcia/demoapp:0.1.0 -f .\demo-app\Dockerfile .
-docker push crgarcia/demoapp:0.1.0
+
+docker build -t crgarcia/demoapp:0.5.0 -f .\demo-app\Dockerfile .
+docker push crgarcia/demoapp:0.5.0
 
 kubectl apply -f ..\..\deployment\deployment.yaml
+
+curl <demoapp k8s-service ip>:8080/api/envs
 ```
 
 ## Approve the VM plan from the marketplace
