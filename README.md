@@ -69,20 +69,93 @@ systemctl enable frr --now
 
 # Enter Frr config console
 sudo vtysh
-
+show running-config
+```
+```
 ## See running config
-show
-router bgp 65111 <- autonomous system number
-...
-ebgp-multihop-2
-65515
-....
-network 6.6.6.6/32
+crgar-glb-hub-vm# show running-config
+Building configuration...
+
+Current configuration:
+!
+frr version 7.5
+frr defaults traditional
+hostname hostname
+no ipv6 forwarding
+hostname crgar-glb-hub-vm
+no service integrated-vtysh-config
+!
+router bgp 65111
+ no bgp ebgp-requires-policy
+ no bgp network import-check
+ neighbor 10.100.3.4 remote-as 65515
+ neighbor 10.100.3.4 ebgp-multihop 2
+ neighbor 10.100.3.5 remote-as 65515
+ neighbor 10.100.3.5 ebgp-multihop 2
+ neighbor 10.200.3.4 remote-as 65515
+ neighbor 10.200.3.4 ebgp-multihop 2
+ neighbor 10.200.3.5 remote-as 65515
+ neighbor 10.200.3.5 ebgp-multihop 2
+ !
+ address-family ipv4 unicast
+  network 6.6.6.6/32
+  neighbor 10.100.3.4 route-map PREP out
+  neighbor 10.100.3.5 route-map PREP out
+ exit-address-family
+!
+route-map PREP permit 10
+ set as-path prepend 65111
+!
+```
+
+```
+crgar-glb-weu-hub-vm# show running-config
+Building configuration...
+
+Current configuration:
+!
+frr version 7.5
+frr defaults traditional
+hostname hostname
+no ipv6 forwarding
+hostname crgar-glb-weu-hub-vm
+no service integrated-vtysh-config
+!
+router bgp 65100
+ no bgp ebgp-requires-policy
+ no bgp network import-check
+ neighbor 10.100.3.4 remote-as 65515
+ neighbor 10.100.3.4 ebgp-multihop 2
+ neighbor 10.100.3.5 remote-as 65515
+ neighbor 10.100.3.5 ebgp-multihop 2
+ neighbor 10.200.3.4 remote-as 65515
+ neighbor 10.200.3.4 ebgp-multihop 2
+ neighbor 10.200.3.5 remote-as 65515
+ neighbor 10.200.3.5 ebgp-multihop 2
+ !
+ address-family ipv4 unicast
+  network 6.6.6.6/32
+  neighbor 10.200.3.4 route-map PREP out
+  neighbor 10.200.3.5 route-map PREP out
+ exit-address-family
+!
+route-map PREP permit 10
+ set as-path prepend 65100
+!
+line vty
+!
+end
+```
 
 
-# fix destination
+# Load config
+sudo more /etc/frr/daemons
+
+# Ip table configuration
 sudo iptables -t nat -L -> -t = which table  -L= List
-DNAT all -- anywhere 6.6.6.6 to:10.220.4.5 <- when you see 6.6.6.6 replace the to to the AKS LB
+PREROUTING: DNAT all anywhere 6.6.6.6 to:10.220.4.5 <- when you see 6.6.6.6 replace the to to the AKS LB
+POSTROUTING: MASQUERADE all anywhere 10.220.4.5
+OUTPUT: DNAT all anywhere 6.6.6.6 to:10.220.4.5
 
 # take a look at what is going on
 sudo tcpdump -i eth0 tcp port 8080 -nnn
