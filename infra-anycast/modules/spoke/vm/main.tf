@@ -7,16 +7,23 @@ resource "azurerm_public_ip" "vm_ip" {
 }
 
 resource "azurerm_network_interface" "vm_nic" {
-  name                = "${var.prefix}-nic"
+  name                = "${var.prefix}-vm-nic"
   location            = var.location
   resource_group_name = var.resource_group_name
 
   ip_configuration {
-    name                          = "${var.prefix}-ip"
+    name                          = "${var.prefix}-vm-ip"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.vm_ip.id
   }
+}
+
+resource "azurerm_route_server_bgp_connection" "vm_bgpconnection" {
+  name            = "${var.prefix}-vm-bgpconnection"
+  route_server_id = var.route_server_id
+  peer_asn        = var.route_server_bgp_peer_asn
+  peer_ip         = azurerm_network_interface.vm_nic.private_ip_address
 }
 
 resource "azurerm_virtual_machine" "vm" {

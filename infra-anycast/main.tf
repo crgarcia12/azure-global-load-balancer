@@ -24,7 +24,7 @@ variable "prefix" {
 #################################
 #           Hub-EUS
 #################################
-module "hub" {
+module "hub-eus" {
   source          = "./modules/hub"
   prefix          = "${var.prefix}-eus-hub"
   location        = "eastus"
@@ -34,18 +34,20 @@ module "hub" {
 #################################
 #           Spoke-EUS
 #################################
-module "spoke_weu" {
-  source          = "./modules/spoke"
-  prefix          = "${var.prefix}-eus-s1"
-  location        = "eastus"
-  ip_second_octet = "223"
-  hub_vnet_name   = module.hub.hub_vnet_name
-  hub_vnet_id     = module.hub.hub_vnet_id
-  hub_rg_name     = module.hub.hub_rg_name
-  fw_vip          = module.hub.fw_vip
+module "spoke_eus_s1" {
+  source               = "./modules/spoke"
+  prefix               = "${var.prefix}-eus-s1"
+  location             = "eastus"
+  ip_second_octet      = "223"
+  hub_vnet_name        = module.hub-eus.hub_vnet_name
+  hub_vnet_id          = module.hub-eus.hub_vnet_id
+  hub_rg_name          = module.hub-eus.hub_rg_name
+  fw_vip               = module.hub-eus.fw_vip
+  hub_ars_id           = module.hub-eus.hub_ars_id
+  hub_ars_bgp_peer_asn = 65223
 
   depends_on = [
-    module.hub
+    module.hub-eus
   ]
 }
 
@@ -75,6 +77,8 @@ module "spoke_weu_s1" {
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
   fw_vip                  = module.hub_weu.fw_vip
+  hub_ars_id              = module.hub_weu.hub_ars_id
+  hub_ars_bgp_peer_asn    = 65113
 
   depends_on = [
     module.hub_weu
@@ -87,8 +91,8 @@ module "spoke_weu_s1" {
 
 resource "azurerm_virtual_network_peering" "hub-hubweu" {
   name                      = "hub-hubweu"
-  resource_group_name       = module.hub.hub_rg_name
-  virtual_network_name      = module.hub.hub_vnet_name
+  resource_group_name       = module.hub-eus.hub_rg_name
+  virtual_network_name      = module.hub-eus.hub_vnet_name
   remote_virtual_network_id = module.hub_weu.hub_vnet_id
 }
 
@@ -96,5 +100,5 @@ resource "azurerm_virtual_network_peering" "hubweu-hub" {
   name                      = "hubweu-hub"
   resource_group_name       = module.hub_weu.hub_rg_name
   virtual_network_name      = module.hub_weu.hub_vnet_name
-  remote_virtual_network_id = module.hub.hub_vnet_id
+  remote_virtual_network_id = module.hub-eus.hub_vnet_id
 }
