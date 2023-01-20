@@ -17,16 +17,16 @@ resource "azurerm_route_server" "ars" {
   branch_to_branch_traffic_enabled = true
 }
 
-resource "azurerm_route_server_bgp_connection" "eastus-vm1-bgpconnection" {
-  name            = "eastus-vm1-bgpconnection"
-  route_server_id = azurerm_route_server.ars.id
-  peer_asn        = 65111
-  peer_ip         = "10.200.2.4"
-}
+# resource "azurerm_route_server_bgp_connection" "eastus-vm1-bgpconnection" {
+#   name            = "eastus-vm1-bgpconnection"
+#   route_server_id = azurerm_route_server.ars.id
+#   peer_asn        = 65111
+#   peer_ip         = "10.223.2.4"
+# }
 
-resource "azurerm_route_server_bgp_connection" "weu-vm1-bgpconnection" {
-  name            = "weu-vm1-bgpconnection"
-  route_server_id = azurerm_route_server.ars.id
-  peer_asn        = 65100
-  peer_ip         = "10.100.2.4"
-}
+# resource "azurerm_route_server_bgp_connection" "weu-vm1-bgpconnection" {
+#   name            = "weu-vm1-bgpconnection"
+#   route_server_id = azurerm_route_server.ars.id
+#   peer_asn        = 65100
+#   peer_ip         = "10.112.2.4"
+# }

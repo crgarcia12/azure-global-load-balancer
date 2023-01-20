@@ -25,29 +25,16 @@ resource "azurerm_virtual_machine" "vm" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = "Standard_D4s_v3"
 
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
-  # storage_image_reference {
-  #   publisher = "Canonical"
-  #   offer     = "UbuntuServer"
-  #   sku       = "18.04-LTS"
-  #   version   = "latest"
-  # }
-
   storage_image_reference {
-    publisher = "eurolinuxspzoo1620639373013"
-    offer     = "centos-8-5-free"
-    sku       = "centos-8-5-free"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "8_5-gen2"
     version   = "latest"
-  }
-
-  plan {
-    name      = "centos-8-5-free"
-    publisher = "eurolinuxspzoo1620639373013"
-    product   = "centos-8-5-free"
   }
 
   storage_os_disk {

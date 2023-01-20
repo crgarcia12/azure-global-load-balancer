@@ -68,7 +68,7 @@ module "spoke_weu_s1" {
   source                  = "./modules/spoke"
   prefix                  = "${var.prefix}-weu-s1"
   location                = "westeurope"
-  ip_second_octet         = "112"
+  ip_second_octet         = "113"
   hub_vnet_name           = module.hub_weu.hub_vnet_name
   hub_vnet_id             = module.hub_weu.hub_vnet_id
   hub_rg_name             = module.hub_weu.hub_rg_name
