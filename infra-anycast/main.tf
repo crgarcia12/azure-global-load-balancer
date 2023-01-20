@@ -26,7 +26,7 @@ variable "prefix" {
 #################################
 module "hub" {
   source          = "./modules/hub"
-  prefix          = "${var.prefix}-hub"
+  prefix          = "${var.prefix}-eus-hub"
   location        = "eastus"
   ip_second_octet = "200"
 }
@@ -36,7 +36,7 @@ module "hub" {
 #################################
 module "spoke_weu" {
   source          = "./modules/spoke"
-  prefix          = "${var.prefix}-weu"
+  prefix          = "${var.prefix}-eus-s1"
   location        = "eastus"
   ip_second_octet = "210"
   hub_vnet_name   = module.hub.hub_vnet_name
@@ -49,24 +49,9 @@ module "spoke_weu" {
   ]
 }
 
-module "spoke_eus" {
-  source          = "./modules/spoke"
-  prefix          = "${var.prefix}-eus"
-  location        = "eastus"
-  ip_second_octet = "220"
-  hub_vnet_name   = module.hub.hub_vnet_name
-  hub_vnet_id     = module.hub.hub_vnet_id
-  hub_rg_name     = module.hub.hub_rg_name
-  fw_vip          = module.hub.fw_vip
-
-  depends_on = [
-    module.hub
-  ]
-}
-
 
 #################################
-#           Hub2
+#           Hub-WEU
 #################################
 module "hub_weu" {
   source          = "./modules/hub"
@@ -77,7 +62,7 @@ module "hub_weu" {
 }
 
 #################################
-#           Spoke2
+#           Spokes-WEU
 #################################
 module "spoke_weu_s1" {
   source                  = "./modules/spoke"
@@ -95,24 +80,6 @@ module "spoke_weu_s1" {
     module.hub_weu
   ]
 }
-
-module "spoke_weu_s2" {
-  source                  = "./modules/spoke"
-  prefix                  = "${var.prefix}-weu-s2"
-  location                = "westeurope"
-  ip_second_octet         = "120"
-  hub_vnet_name           = module.hub_weu.hub_vnet_name
-  hub_vnet_id             = module.hub_weu.hub_vnet_id
-  hub_rg_name             = module.hub_weu.hub_rg_name
-  aks_network_plugin_mode = null
-  aks_ebpf_data_plane     = null
-  fw_vip                  = module.hub_weu.fw_vip
-
-  depends_on = [
-    module.hub_weu
-  ]
-}
-
 
 #################################
 #           Hub Peerings
