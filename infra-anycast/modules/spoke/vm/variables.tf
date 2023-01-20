@@ -23,3 +23,15 @@ variable "resource_group_name" {
 variable "subnet_id" {
   type = string
 }
+
+################################
+#         Hub
+################################
+
+variable "route_server_id" {
+  type = string
+}
+
+variable "route_server_bgp_peer_asn" {
+  type = string
+}

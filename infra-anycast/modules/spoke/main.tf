@@ -16,11 +16,13 @@ module "spoke_vnet" {
 }
 
 module "spoke_vm" {
-  source              = "./vm"
-  prefix              = var.prefix
-  location            = var.location
-  resource_group_name = azurerm_resource_group.spoke_rg.name
-  subnet_id           = module.spoke_vnet.vnet_vm_subnet_id
+  source                    = "./vm"
+  prefix                    = var.prefix
+  location                  = var.location
+  resource_group_name       = azurerm_resource_group.spoke_rg.name
+  subnet_id                 = module.spoke_vnet.vnet_vm_subnet_id
+  route_server_id           = var.hub_ars_id
+  route_server_bgp_peer_asn = var.hub_ars_bgp_peer_asn
 }
 
 module "aks" {

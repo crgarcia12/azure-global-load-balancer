@@ -6,6 +6,10 @@ output "hub_vnet_name" {
   value = module.hub_vnet.vnet_name
 }
 
+output "hub_ars_id" {
+  value = module.hub_ars.route_server_id
+}
+
 output "fw_vip" {
   value = module.hub_fw.fw_vip
 }
