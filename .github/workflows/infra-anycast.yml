@@ -10,6 +10,8 @@ on:
     paths:
     - infra-anycast/**
   pull_request:
+    paths:
+    - infra-frontdoor/**
 
 jobs:
   terraform:
