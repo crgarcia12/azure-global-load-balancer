@@ -16,19 +16,6 @@ provider "azurerm" {
   features {}
 }
 
-variable "prefix" {
-  type    = string
-  default = "crgar-glb"
-}
-variable "ssh_username" {
-  type      = string
-  sensitive = true
-}
-variable "ssh_password" {
-  type      = string
-  sensitive = true
-}
-
 #################################
 #           Hub-EUS
 #################################
@@ -37,8 +24,8 @@ module "hub-eus" {
   prefix          = "${var.prefix}-eus-hub"
   location        = "eastus"
   ip_second_octet = "222"
-  ssh_username    = var.ssh_username
-  ssh_password    = var.ssh_password
+  ssh_username    = var.SSH_USERNAME
+  ssh_password    = var.SSH_PASSWORD
 }
 
 #################################
