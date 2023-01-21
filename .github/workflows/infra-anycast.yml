@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform BGP Solution'
 
 on:
   workflow_dispatch:  

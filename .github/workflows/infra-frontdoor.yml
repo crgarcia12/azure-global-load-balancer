@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform FrontDoor solution'
 
 on:
   workflow_dispatch:  
