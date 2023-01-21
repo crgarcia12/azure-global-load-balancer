@@ -30,12 +30,12 @@ variable "aks_ebpf_data_plane" {
 }
 
 variable "ssh_username" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "ssh_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 

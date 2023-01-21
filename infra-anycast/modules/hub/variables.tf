@@ -18,10 +18,10 @@ variable "ip_second_octet" {
 }
 
 variable "ssh_username" {
-  type = string
+  type      = string
   sensitive = true
 }
 variable "ssh_password" {
-  type = string
+  type      = string
   sensitive = true
 }

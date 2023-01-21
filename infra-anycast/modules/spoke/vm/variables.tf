@@ -40,10 +40,10 @@ variable "route_server_bgp_peer_asn" {
 #         VM
 ################################
 variable "ssh_username" {
-  type = string
+  type      = string
   sensitive = true
 }
 variable "ssh_password" {
-  type = string
+  type      = string
   sensitive = true
 }

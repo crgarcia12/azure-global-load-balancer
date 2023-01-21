@@ -21,11 +21,11 @@ variable "prefix" {
   default = "crgar-glb"
 }
 variable "ssh_username" {
-  type = string
+  type      = string
   sensitive = true
 }
 variable "ssh_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -55,8 +55,8 @@ module "spoke_eus_s1" {
   fw_vip               = module.hub-eus.fw_vip
   hub_ars_id           = module.hub-eus.hub_ars_id
   hub_ars_bgp_peer_asn = 65223
-  ssh_username    = var.ssh_username
-  ssh_password    = var.ssh_password
+  ssh_username         = var.ssh_username
+  ssh_password         = var.ssh_password
 
   depends_on = [
     module.hub-eus
@@ -92,9 +92,9 @@ module "spoke_weu_s1" {
   fw_vip                  = module.hub_weu.fw_vip
   hub_ars_id              = module.hub_weu.hub_ars_id
   hub_ars_bgp_peer_asn    = 65113
-  ssh_username    = var.ssh_username
-  ssh_password    = var.ssh_password
-  
+  ssh_username            = var.ssh_username
+  ssh_password            = var.ssh_password
+
   depends_on = [
     module.hub_weu
   ]
