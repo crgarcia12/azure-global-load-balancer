@@ -16,13 +16,13 @@ module "spoke_vnet" {
 }
 
 module "spoke_vm" {
-  source                    = "./vm"
-  prefix                    = var.prefix
-  location                  = var.location
-  resource_group_name       = azurerm_resource_group.spoke_rg.name
-  subnet_id                 = module.spoke_vnet.vnet_vm_subnet_id
-  ssh_username              = var.ssh_username
-  ssh_password              = var.ssh_password
+  source              = "./vm"
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.spoke_rg.name
+  subnet_id           = module.spoke_vnet.vnet_vm_subnet_id
+  ssh_username        = var.ssh_username
+  ssh_password        = var.ssh_password
 }
 
 module "aks" {

@@ -32,16 +32,16 @@ module "hub-eus" {
 #           Spoke-EUS
 #################################
 module "spoke_eus_s1" {
-  source               = "./modules/spoke"
-  prefix               = "${var.prefix}-eus-s1"
-  location             = "eastus"
-  ip_second_octet      = "223"
-  hub_vnet_name        = module.hub-eus.hub_vnet_name
-  hub_vnet_id          = module.hub-eus.hub_vnet_id
-  hub_rg_name          = module.hub-eus.hub_rg_name
-  fw_vip               = module.hub-eus.fw_vip
-  ssh_username         = var.SSH_USERNAME
-  ssh_password         = var.SSH_PASSWORD
+  source          = "./modules/spoke"
+  prefix          = "${var.prefix}-eus-s1"
+  location        = "eastus"
+  ip_second_octet = "223"
+  hub_vnet_name   = module.hub-eus.hub_vnet_name
+  hub_vnet_id     = module.hub-eus.hub_vnet_id
+  hub_rg_name     = module.hub-eus.hub_rg_name
+  fw_vip          = module.hub-eus.fw_vip
+  ssh_username    = var.SSH_USERNAME
+  ssh_password    = var.SSH_PASSWORD
 
   depends_on = [
     module.hub-eus
