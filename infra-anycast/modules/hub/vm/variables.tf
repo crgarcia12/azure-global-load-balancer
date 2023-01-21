@@ -23,3 +23,15 @@ variable "resource_group_name" {
 variable "subnet_id" {
   type = string
 }
+
+################################
+#         VM
+################################
+variable "ssh_username" {
+  type = string
+  sensitive = true
+}
+variable "ssh_password" {
+  type = string
+  sensitive = true
+}

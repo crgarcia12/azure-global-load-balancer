@@ -28,6 +28,17 @@ variable "aks_ebpf_data_plane" {
   type        = string
   default     = "cilium"
 }
+
+variable "ssh_username" {
+  type = string
+  sensitive = true
+}
+
+variable "ssh_password" {
+  type = string
+  sensitive = true
+}
+
 ################################
 #         Hub
 ################################
