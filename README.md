@@ -16,8 +16,12 @@ There are two proposals:
 
 ## Run terraform
 ```
+# Set secrets via environment variables
+$env:TF_VAR_SSH_USERNAME=<username>
+$env:TF_VAR_SSH_PASSWORD=<password>
 $resourceGroup = "crgar-fd-glb-terraform-rg"
 $storageName = "crgarfdglbterraformstor"
+
 az group create --name $resourceGroup --location eastus
 az storage account create --resource-group $resourceGroup --name $storageName --sku Standard_LRS --encryption-services blob
 az storage container create --name tfstate --account-name $storageName
@@ -54,7 +58,8 @@ AZURE_CLIENT_ID = clientId
 AZURE_CLIENT_SECRET = clientSecret
 AZURE_TENANT_ID = tenantId
 MVP_SUBSCRIPTION = subscriptionId
-
+TF_VAR_SSH_USERNAME = vms-username
+TF_VAR_SSH_PASSWORD = vms-password
 ```
 
 ## VM script

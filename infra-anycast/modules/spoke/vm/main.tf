@@ -1,3 +1,7 @@
+locals {
+  vm_name = "${var.prefix}-vm"
+}
+
 resource "azurerm_public_ip" "vm_ip" {
   name                = "${var.prefix}-vm-ip"
   resource_group_name = var.resource_group_name
@@ -27,7 +31,7 @@ resource "azurerm_route_server_bgp_connection" "vm_bgpconnection" {
 }
 
 resource "azurerm_virtual_machine" "vm" {
-  name                  = "${var.prefix}-vm"
+  name                  = local.vm_name
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
@@ -51,10 +55,11 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "adminuser"
-    admin_password = "P@ssword123123"
+    computer_name  = local.vm_name
+    admin_username = var.ssh_username
+    admin_password = var.ssh_password
   }
+
   os_profile_linux_config {
     disable_password_authentication = false
   }
