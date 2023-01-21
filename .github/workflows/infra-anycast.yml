@@ -55,6 +55,9 @@ jobs:
 
     - name: 'Terraform Plan'
       uses: hashicorp/terraform-github-actions@master
+      env:
+        TF_VAR_SSH_USERNAME: ${{ secrets.TF_VAR_SSH_USERNAME }}
+        TF_VAR_SSH_PASSWORD: ${{ secrets.TF_VAR_SSH_PASSWORD }}
       with:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'plan'
@@ -63,6 +66,9 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
       uses: hashicorp/terraform-github-actions@master
+      env:
+        TF_VAR_SSH_USERNAME: ${{ secrets.TF_VAR_SSH_USERNAME }}
+        TF_VAR_SSH_PASSWORD: ${{ secrets.TF_VAR_SSH_PASSWORD }}
       with:
         tf_actions_version: 0.14.8
         tf_actions_subcommand: 'apply'
