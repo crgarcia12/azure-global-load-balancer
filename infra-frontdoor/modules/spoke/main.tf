@@ -1,5 +1,8 @@
+locals {
+  resource_group_name = "${var.prefix}-rg"
+}
 resource "azurerm_resource_group" "spoke_rg" {
-  name     = "${var.prefix}-rg"
+  name     = local.resource_group_name
   location = "westeurope"
 }
 

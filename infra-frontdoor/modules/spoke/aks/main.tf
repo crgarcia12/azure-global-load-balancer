@@ -1,3 +1,7 @@
+locals {
+  aks_name = "${var.prefix}-aks"
+}
+
 resource "azurerm_user_assigned_identity" "aks-msi" {
   name                = "${var.prefix}-aks-msi"
   location            = var.location
@@ -11,7 +15,7 @@ resource "azurerm_role_assignment" "aks-msi-assignment" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                      = "${var.prefix}-aks"
+  name                      = local.aks_name
   location                  = var.location
   resource_group_name       = var.resource_group_name
   dns_prefix                = "${var.prefix}-aks"
