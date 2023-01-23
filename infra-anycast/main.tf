@@ -20,47 +20,48 @@ provider "azurerm" {
 #           Hub-EUS
 #################################
 module "hub-eus" {
-  source          = "./modules/hub"
-  prefix          = "${var.prefix}-eus-hub"
-  location        = "eastus"
-  ip_second_octet = "222"
-  ssh_username    = var.SSH_USERNAME
-  ssh_password    = var.SSH_PASSWORD
+  source               = "./modules/hub"
+  prefix               = "${var.prefix}-eus-hub"
+  location             = "eastus"
+  ip_second_octet      = "222"
+  hub_ars_id           = module.hub-eus.hub_ars_id
+  hub_ars_bgp_peer_asn = 65222
+  ssh_username         = var.SSH_USERNAME
+  ssh_password         = var.SSH_PASSWORD
 }
 
 #################################
 #           Spoke-EUS
 #################################
 module "spoke_eus_s1" {
-  source               = "./modules/spoke"
-  prefix               = "${var.prefix}-eus-s1"
-  location             = "eastus"
-  ip_second_octet      = "223"
-  hub_vnet_name        = module.hub-eus.hub_vnet_name
-  hub_vnet_id          = module.hub-eus.hub_vnet_id
-  hub_rg_name          = module.hub-eus.hub_rg_name
-  fw_vip               = module.hub-eus.fw_vip
-  hub_ars_id           = module.hub-eus.hub_ars_id
-  hub_ars_bgp_peer_asn = 65223
-  ssh_username         = var.SSH_USERNAME
-  ssh_password         = var.SSH_PASSWORD
+  source          = "./modules/spoke"
+  prefix          = "${var.prefix}-eus-s1"
+  location        = "eastus"
+  ip_second_octet = "223"
+  hub_vnet_name   = module.hub-eus.hub_vnet_name
+  hub_vnet_id     = module.hub-eus.hub_vnet_id
+  hub_rg_name     = module.hub-eus.hub_rg_name
+  fw_vip          = module.hub-eus.fw_vip
+  ssh_username    = var.SSH_USERNAME
+  ssh_password    = var.SSH_PASSWORD
 
   depends_on = [
     module.hub-eus
   ]
 }
 
-
 #################################
 #           Hub-WEU
 #################################
 module "hub_weu" {
-  source          = "./modules/hub"
-  prefix          = "${var.prefix}-weu-hub"
-  location        = "westeurope"
-  ip_second_octet = "111"
-  ssh_username    = var.SSH_USERNAME
-  ssh_password    = var.SSH_PASSWORD
+  source               = "./modules/hub"
+  prefix               = "${var.prefix}-weu-hub"
+  location             = "westeurope"
+  ip_second_octet      = "111"
+  hub_ars_id           = module.hub_weu.hub_ars_id
+  hub_ars_bgp_peer_asn = 65111
+  ssh_username         = var.SSH_USERNAME
+  ssh_password         = var.SSH_PASSWORD
 }
 
 #################################
@@ -77,8 +78,6 @@ module "spoke_weu_s1" {
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
   fw_vip                  = module.hub_weu.fw_vip
-  hub_ars_id              = module.hub_weu.hub_ars_id
-  hub_ars_bgp_peer_asn    = 65113
   ssh_username            = var.SSH_USERNAME
   ssh_password            = var.SSH_PASSWORD
 
