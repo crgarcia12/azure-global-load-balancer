@@ -198,3 +198,53 @@ curl <demoapp k8s-service ip>:8080/api/envs
 ```
 az vm image accept-terms --urn eurolinuxspzoo1620639373013:centos-8-5-free:centos-8-5-free:latest
 ```
+
+# Setting up VM - notes from a session with Federico
+```
+1) Install frr and set it as daemon  
+sudo dnf install frr
+sudo vi /etc/frr/daemons
+sudo systemctl enable frr --now
+sudo vtysh
+
+2) What route servers do we want to talk to?
+```
+# configure terminal  <- enter the config terminal
+# router bgp 65222    <- who am I
+# bgp ebgp-requires-policy <- NOT FOR PROD! this allows all bgp rules to be received
+# neighbor 10.222.3.5 remote-as 65515 <- configure other bgp (neighbour) called 65515 (all Azure BGP servers) at the peer ips of the route server
+# neighbor 10.222.3.5 ebgp-multihop 2 <- tell your neighbor that vm is a different subnet! you need to say how many hops (2) are in between. Azure Route Server is 2. 
+--- now do the same for the other peer Ip of the ARS
+# Ctrl+Z
+
+3) Check that BGP connections are happening
+# show ip bgp
+
+4) Now is time to send routes to the ARS
+# sudo vtysh
+# (config) router bgp
+# (config-router) no bgp network import-check <- NOT FOR PROD! this allows all bgp rules to be propagated
+# (config-router) address-family ipv4 unicast <- enter the ipv4 family configs
+# (config-router-af) network 6.6.6.6/32
+
+# show ip bgp
+*> 6.6.6.6/32 <- routes from my route table ready to be propagated
+
+5) now we have a problem, both NVA can handle the same traffic. how to prio?
+5.1) Create a route map, that will prepend the tag
+# (config) route-map
+# (config) route-map PREPEND65111
+# (config) route-map PREPEND65111 permit
+# (config) route-map PREPEND65111 permit 10
+# (config-map) set as-path prepend
+# (config-map) set as-path prepend 65111
+
+5.2) Enable the transformation to the OUTbound traffic going to 10.222.3.5
+# (config) router bgp
+# (config-router) address-family ipv4 unicast 
+# (config-router-af) neighbor 10.222.3.5 route-map  PREPEND65111 out <-
+
+Do you have any probems?
+vtysh# clear ip bgp * <- clear bgp connections
+
+```
