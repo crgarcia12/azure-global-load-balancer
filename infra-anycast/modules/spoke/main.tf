@@ -21,8 +21,6 @@ module "spoke_vm" {
   location                  = var.location
   resource_group_name       = azurerm_resource_group.spoke_rg.name
   subnet_id                 = module.spoke_vnet.vnet_vm_subnet_id
-  route_server_id           = var.hub_ars_id
-  route_server_bgp_peer_asn = var.hub_ars_bgp_peer_asn
   ssh_username              = var.ssh_username
   ssh_password              = var.ssh_password
 }
