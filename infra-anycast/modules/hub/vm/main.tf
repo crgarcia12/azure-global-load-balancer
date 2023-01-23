@@ -24,6 +24,14 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
+resource "azurerm_route_server_bgp_connection" "vm_bgpconnection" {
+  name            = "${var.prefix}-vm-bgpconnection"
+  route_server_id = var.route_server_id
+  peer_asn        = var.route_server_bgp_peer_asn
+  peer_ip         = azurerm_network_interface.vm_nic.private_ip_address
+}
+
+
 resource "azurerm_virtual_machine" "vm" {
   name                  = local.vm_name
   location              = var.location
