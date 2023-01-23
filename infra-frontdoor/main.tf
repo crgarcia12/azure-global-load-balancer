@@ -88,8 +88,8 @@ resource "azurerm_resource_group" "frontdoor_rg" {
 }
 
 module "frontfoor" {
-  prefix = "${var.prefix}-frontdoor"
-  source = "./modules/frontdoor"
+  prefix              = "${var.prefix}-frontdoor"
+  source              = "./modules/frontdoor"
   resource_group_name = azurerm_resource_group.frontdoor_rg.name
 }
 

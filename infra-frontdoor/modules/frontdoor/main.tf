@@ -264,7 +264,7 @@ resource "azurerm_cdn_frontdoor_origin_group" "backendapis" {
 #### WAF
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "global" {
-  name                = "${replace(var.prefix,"-","")}globalfdfp"
+  name                = "${replace(var.prefix, "-", "")}globalfdfp"
   resource_group_name = var.resource_group_name
   sku_name            = azurerm_cdn_frontdoor_profile.main.sku_name
   enabled             = true
@@ -309,7 +309,7 @@ resource "azurerm_cdn_frontdoor_security_policy" "global" {
 ###########################################################
 locals {
   front_door_subdomain = "glbapp"
-  frontdoor_fqdn = "${local.front_door_subdomain}.${data.azurerm_dns_zone.customdomain.name}"
+  frontdoor_fqdn       = "${local.front_door_subdomain}.${data.azurerm_dns_zone.customdomain.name}"
 }
 
 data "azurerm_dns_zone" "customdomain" {
