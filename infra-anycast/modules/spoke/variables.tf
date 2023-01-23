@@ -57,11 +57,3 @@ variable "hub_rg_name" {
 variable "fw_vip" {
   type = string
 }
-
-variable "hub_ars_id" {
-  type = string
-}
-
-variable "hub_ars_bgp_peer_asn" {
-  type = string
-}

@@ -25,18 +25,6 @@ variable "subnet_id" {
 }
 
 ################################
-#         Hub
-################################
-
-variable "route_server_id" {
-  type = string
-}
-
-variable "route_server_bgp_peer_asn" {
-  type = string
-}
-
-################################
 #         VM
 ################################
 variable "ssh_username" {

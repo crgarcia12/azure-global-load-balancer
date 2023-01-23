@@ -16,16 +16,19 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  weu_hub_ars_bgp_peer_asn = 65111
+  eus_hub_ars_bgp_peer_asn = 65222
+}
+
 #################################
-#           Hub-EUS
+#           hub-eus
 #################################
 module "hub-eus" {
   source               = "./modules/hub"
   prefix               = "${var.prefix}-eus-hub"
   location             = "eastus"
   ip_second_octet      = "222"
-  hub_ars_id           = module.hub-eus.hub_ars_id
-  hub_ars_bgp_peer_asn = 65222
   ssh_username         = var.SSH_USERNAME
   ssh_password         = var.SSH_PASSWORD
 }
@@ -58,8 +61,6 @@ module "hub_weu" {
   prefix               = "${var.prefix}-weu-hub"
   location             = "westeurope"
   ip_second_octet      = "111"
-  hub_ars_id           = module.hub_weu.hub_ars_id
-  hub_ars_bgp_peer_asn = 65111
   ssh_username         = var.SSH_USERNAME
   ssh_password         = var.SSH_PASSWORD
 }
@@ -85,6 +86,40 @@ module "spoke_weu_s1" {
     module.hub_weu
   ]
 }
+
+#################################
+#      BGP Configurations
+#################################
+
+resource "azurerm_route_server_bgp_connection" "vm_eus_eus_bgpconnection" {
+  name            = "${var.prefix}-eus-hub-vm-bgpconnection"
+  route_server_id = module.hub-eus.hub_ars_id
+  peer_asn        = local.eus_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub-eus.vm_private_ip_address
+}
+
+resource "azurerm_route_server_bgp_connection" "vm_eus_weu_bgpconnection" {
+  name            = "${var.prefix}-eus-hub-vm-bgpconnection"
+  route_server_id = module.hub_weu.hub_ars_id
+  peer_asn        = local.eus_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub-eus.vm_private_ip_address
+}
+
+
+resource "azurerm_route_server_bgp_connection" "vm_weu_eus_bgpconnection" {
+  name            = "${var.prefix}-weu-hub-vm-bgpconnection"
+  route_server_id = module.hub-eus.hub_ars_id
+  peer_asn        = local.weu_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub_weu.vm_private_ip_address
+}
+
+resource "azurerm_route_server_bgp_connection" "vm_weu_weu_bgpconnection" {
+  name            = "${var.prefix}-weu-hub-vm-bgpconnection"
+  route_server_id = module.hub_weu.hub_ars_id
+  peer_asn        = local.weu_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub_weu.vm_private_ip_address
+}
+
 
 #################################
 #           Hub Peerings
