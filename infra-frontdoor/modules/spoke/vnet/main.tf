@@ -145,7 +145,6 @@ resource "azurerm_virtual_network_peering" "spoke-hub" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = local.vnet_name
   remote_virtual_network_id = var.hub_vnet_id
-  use_remote_gateways       = true
 
   depends_on = [
     azurerm_virtual_network.vnet,
@@ -158,5 +157,4 @@ resource "azurerm_virtual_network_peering" "hub-spoke" {
   resource_group_name       = var.hub_vnet_rg_name
   virtual_network_name      = var.hub_vnet_name
   remote_virtual_network_id = azurerm_virtual_network.vnet.id
-  allow_gateway_transit     = true
 }

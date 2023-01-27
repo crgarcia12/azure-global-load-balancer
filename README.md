@@ -235,7 +235,7 @@ sudo vtysh
 # (config) route-map
 # (config) route-map PREPEND65111
 # (config) route-map PREPEND65111 permit
-# (config) route-map PREPEND65111 permit 10
+# (config) route-map PREPEND65111 permit 10 <- 10 is a priority number, to srot routes
 # (config-map) set as-path prepend
 # (config-map) set as-path prepend 65111
 
@@ -243,6 +243,32 @@ sudo vtysh
 # (config) router bgp
 # (config-router) address-family ipv4 unicast 
 # (config-router-af) neighbor 10.222.3.5 route-map  PREPEND65111 out <-
+
+6) Let's store the config!   
+# write
+
+7) check all the configs: 
+show ip bgp neighbors 10.111.3.4 advertised-routes
+
+8) now, let's do iptables! 
+8.1) Let's receive packages for a virtual ip. this is called forwarding in the linux kernel
+sudo sysctl -w net.ipv4.conf.all.forwarding=1 <- allow ip forwarding in the kernel
+vi /etc/sysctl.d/50-sysctl
+net.ipv4.conf.all.forwarding=1
+
+8.2) 
+# sudo iptables -t nat -A PREROUTING -d 6.6.6.6/32 -j DNAT --to-destination 10.113.4.33
+# sudo iptables -t nat -A POSTROUTING -d 10.113.4.33 -j MASQUERADE  
+# sudo iptables -t nat -A OUTPUT -d 6.6.6.6/32 -j DNAT --to-destination 10.113.4.33
+
+
+9) how to test?
+# sudo vttsh
+# configure terminal
+# router bgp
+# no network 6.6.6.6/32
+# network 6.6.6.6/32
+
 
 Do you have any probems?
 vtysh# clear ip bgp * <- clear bgp connections

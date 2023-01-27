@@ -25,12 +25,12 @@ locals {
 #           hub-eus
 #################################
 module "hub-eus" {
-  source               = "./modules/hub"
-  prefix               = "${var.prefix}-eus-hub"
-  location             = "eastus"
-  ip_second_octet      = "222"
-  ssh_username         = var.SSH_USERNAME
-  ssh_password         = var.SSH_PASSWORD
+  source          = "./modules/hub"
+  prefix          = "${var.prefix}-eus-hub"
+  location        = "eastus"
+  ip_second_octet = "222"
+  ssh_username    = var.SSH_USERNAME
+  ssh_password    = var.SSH_PASSWORD
 }
 
 #################################
@@ -57,12 +57,12 @@ module "spoke_eus_s1" {
 #           Hub-WEU
 #################################
 module "hub_weu" {
-  source               = "./modules/hub"
-  prefix               = "${var.prefix}-weu-hub"
-  location             = "westeurope"
-  ip_second_octet      = "111"
-  ssh_username         = var.SSH_USERNAME
-  ssh_password         = var.SSH_PASSWORD
+  source          = "./modules/hub"
+  prefix          = "${var.prefix}-weu-hub"
+  location        = "westeurope"
+  ip_second_octet = "111"
+  ssh_username    = var.SSH_USERNAME
+  ssh_password    = var.SSH_PASSWORD
 }
 
 #################################
