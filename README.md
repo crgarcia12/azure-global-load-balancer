@@ -204,7 +204,6 @@ sudo systemctl enable frr --now
 sudo vtysh
 
 2) What route servers do we want to talk to?
-```
 # configure terminal  <- enter the config terminal
 # router bgp 65222    <- who am I
 # bgp ebgp-requires-policy <- NOT FOR PROD! this allows all bgp rules to be received
