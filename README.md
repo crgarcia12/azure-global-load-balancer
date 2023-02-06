@@ -62,7 +62,7 @@ TF_VAR_SSH_USERNAME = vms-username
 TF_VAR_SSH_PASSWORD = vms-password
 ```
 
-## VM script
+## Configure the VM
 ``` bash
 14:25
 
@@ -152,7 +152,6 @@ line vty
 end
 ```
 
-
 # Load config
 sudo more /etc/frr/daemons
 
@@ -162,12 +161,9 @@ sudo iptables -t nat -L -> -t = which table  -L= List
 PREROUTING:  DNAT all anywhere 6.6.6.6 to:10.220.4.5    <-    when you see 6.6.6.6 replace the to to the AKS LB
 POSTROUTING: MASQUERADE all anywhere 10.220.4.5         <-    return traffic destination IP should also be replaced
 OUTPUT:      DNAT all anywhere 6.6.6.6 to:10.220.4.5
-```
-# take a look at what is going on
+
+# validate:
 sudo tcpdump -i eth0 tcp port 8080 -nnn
-
-# now we need to replace the 
-
 ```
 
 ## Build the demo app
