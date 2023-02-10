@@ -1,6 +1,11 @@
+[UNDER CONSTRUCTION]
+
 # Global load balancer architecture design in Azure
 
-There are two proposals:
+The propose of this repo is to test different alternatives to have privat global load balancer across regions in Azure.
+The repo contains terraform templates, details instructions and GitHub Actions to make it easy to replicate in your environment.
+
+Currently, it is under development
 
 # Proposal 1: BGP based solution
 [![Terraform](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml/badge.svg)](https://github.com/crgarcia12/azure-global-load-balancer/actions/workflows/infra-anycast.yml)
