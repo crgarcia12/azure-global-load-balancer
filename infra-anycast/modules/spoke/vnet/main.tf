@@ -68,6 +68,13 @@ resource "azurerm_route_table" "udr" {
     next_hop_type          = "VirtualAppliance"
     next_hop_in_ip_address = var.fw_vip
   }
+
+  route {
+    name                   = "fwdfirewall"
+    address_prefix         = "0.0.0.0/0"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = var.fw_vip
+  }
 }
 
 #################################################
