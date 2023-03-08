@@ -25,13 +25,13 @@ module "spoke_vm" {
   ssh_password        = var.ssh_password
 }
 
-module "aks" {
-  source              = "./aks"
-  prefix              = var.prefix
-  location            = var.location
-  resource_group_name = azurerm_resource_group.spoke_rg.name
-  resource_group_id   = azurerm_resource_group.spoke_rg.id
-  subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
-  network_plugin_mode = var.aks_network_plugin_mode
-  ebpf_data_plane     = var.aks_ebpf_data_plane
-}
+# module "aks" {
+#   source              = "./aks"
+#   prefix              = var.prefix
+#   location            = var.location
+#   resource_group_name = azurerm_resource_group.spoke_rg.name
+#   resource_group_id   = azurerm_resource_group.spoke_rg.id
+#   subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
+#   network_plugin_mode = var.aks_network_plugin_mode
+#   ebpf_data_plane     = var.aks_ebpf_data_plane
+# }
