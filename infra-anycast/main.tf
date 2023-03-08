@@ -81,8 +81,8 @@ module "spoke_weu_s1" {
   aks_ebpf_data_plane     = null
   # [COST]  
   # fw_vip                  = module.hub_weu.fw_vip
-  ssh_username            = var.SSH_USERNAME
-  ssh_password            = var.SSH_PASSWORD
+  ssh_username = var.SSH_USERNAME
+  ssh_password = var.SSH_PASSWORD
 
   depends_on = [
     module.hub_weu
