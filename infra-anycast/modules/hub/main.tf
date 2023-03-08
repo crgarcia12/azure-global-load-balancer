@@ -10,7 +10,15 @@ module "hub_vnet" {
   ip_second_octet     = var.ip_second_octet
   resource_group_name = azurerm_resource_group.hub_rg.name
 }
+module "hub_ars" {
+  source              = "./routeserver"
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.hub_rg.name
+  subnet_id           = module.hub_vnet.vnet_ars_subnet_id
+}
 
+# [COST] 
 # module "hub_vm" {
 #   source              = "./vm"
 #   prefix              = var.prefix
@@ -20,14 +28,6 @@ module "hub_vnet" {
 #   ssh_username        = var.ssh_username
 #   ssh_password        = var.ssh_password
 # }
-
-module "hub_ars" {
-  source              = "./routeserver"
-  prefix              = var.prefix
-  location            = var.location
-  resource_group_name = azurerm_resource_group.hub_rg.name
-  subnet_id           = module.hub_vnet.vnet_ars_subnet_id
-}
 
 # module "hub_fw" {
 #   source              = "./firewall"

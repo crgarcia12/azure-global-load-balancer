@@ -25,6 +25,7 @@ module "spoke_vm" {
   ssh_password        = var.ssh_password
 }
 
+# [COST] 
 # module "aks" {
 #   source              = "./aks"
 #   prefix              = var.prefix
