@@ -274,3 +274,14 @@ Do you have any probems?
 vtysh# clear ip bgp * <- clear bgp connections
 
 ```
+
+# Turn off VMs and Fw
+
+$firewallsRgs = @("crgar-fd-weu-hub-rg", "crgar-glb-eus-hub-rg", "crgar-glb-eus-hub-rg")
+$firewallsNames = @("crgar-fd-weu-hub-fw", "crgar-glb-eus-hub-fw", "crgar-glb-eus-hub-fw")
+
+for ($i=0; $i -th $firewallsRgs.Count; $i++ ) {
+    $azfw = Get-AzFirewall -Name $firewallsNames[$i] -ResourceGroupName $firewallsRgs[$i] 
+    $azfw.Deallocate()
+    Set-AzFirewall -AzureFirewall $azfw
+}

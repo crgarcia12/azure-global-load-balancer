@@ -36,12 +36,14 @@ provider "azurerm" {
 #   prefix          = "${var.prefix}-eus-s1"
 #   location        = "eastus"
 #   ip_second_octet = "223"
-#   hub_vnet_name   = module.hub-eus.hub_vnet_name
-#   hub_vnet_id     = module.hub-eus.hub_vnet_id
-#   hub_rg_name     = module.hub-eus.hub_rg_name
-#   fw_vip          = module.hub-eus.fw_vip
-#   ssh_username    = var.SSH_USERNAME
-#   ssh_password    = var.SSH_PASSWORD
+#   hub_vnet_name           = module.hub_weu.hub_vnet_name
+#   hub_vnet_id             = module.hub_weu.hub_vnet_id
+#   hub_rg_name             = module.hub_weu.hub_rg_name
+#   aks_network_plugin_mode = null
+#   aks_ebpf_data_plane     = null
+#   fw_vip                  = module.hub_weu.fw_vip
+#   ssh_username            = var.SSH_USERNAME
+#   ssh_password            = var.SSH_PASSWORD
 
 #   depends_on = [
 #     module.hub-eus
@@ -73,7 +75,8 @@ module "spoke_weu_s1" {
   hub_rg_name             = module.hub_weu.hub_rg_name
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
-  fw_vip                  = module.hub_weu.fw_vip
+  # [COST]
+  # fw_vip                  = module.hub_weu.fw_vip
   ssh_username            = var.SSH_USERNAME
   ssh_password            = var.SSH_PASSWORD
 
@@ -87,11 +90,12 @@ resource "azurerm_resource_group" "frontdoor_rg" {
   location = "westeurope"
 }
 
-module "frontfoor" {
-  prefix              = "${var.prefix}-frontdoor"
-  source              = "./modules/frontdoor"
-  resource_group_name = azurerm_resource_group.frontdoor_rg.name
-}
+# [COST]
+# module "frontfoor" {
+#   prefix              = "${var.prefix}-frontdoor"
+#   source              = "./modules/frontdoor"
+#   resource_group_name = azurerm_resource_group.frontdoor_rg.name
+# }
 
 #################################
 #           Hub Peerings

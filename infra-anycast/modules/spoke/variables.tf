@@ -53,7 +53,7 @@ variable "hub_vnet_id" {
 variable "hub_rg_name" {
   type = string
 }
-
-variable "fw_vip" {
-  type = string
-}
+# [COST] 
+# variable "fw_vip" {
+#   type = string
+# }
