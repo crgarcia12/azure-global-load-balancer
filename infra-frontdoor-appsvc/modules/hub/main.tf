@@ -10,13 +10,6 @@ module "hub_vnet" {
   ip_second_octet     = var.ip_second_octet
   resource_group_name = azurerm_resource_group.hub_rg.name
 }
-module "hub_ars" {
-  source              = "./routeserver"
-  prefix              = var.prefix
-  location            = var.location
-  resource_group_name = azurerm_resource_group.hub_rg.name
-  subnet_id           = module.hub_vnet.vnet_ars_subnet_id
-}
 
 module "hub_vm" {
   source              = "./vm"
@@ -34,10 +27,4 @@ module "hub_fw" {
   location            = var.location
   resource_group_name = azurerm_resource_group.hub_rg.name
   subnet_id           = module.hub_vnet.vnet_fw_subnet_id
-}
-
-module "hub_dns" {
-  source              = "./dns_zones"
-  resource_group_name = azurerm_resource_group.hub_rg.name
-  vnet_id             = module.hub_vnet.vnet_id
 }

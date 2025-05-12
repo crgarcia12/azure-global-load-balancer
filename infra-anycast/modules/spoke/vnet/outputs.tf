@@ -9,3 +9,7 @@ output "vnet_ars_subnet_id" {
 output "vnet_aks_subnet_id" {
   value = azurerm_subnet.aks.id
 }
+
+output "vnet_stor_subnet_id" {
+  value = azurerm_subnet.stor.id
+}

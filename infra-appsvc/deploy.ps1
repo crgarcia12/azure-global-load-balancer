@@ -1,0 +1,2 @@
+docker build -t crgarbiceptestacr.azurecr.io/apiapp:v3 .; docker push  crgarbiceptestacr.azurecr.io/apiapp:v3
+az deployment group create -n app3 -g crgar-bicep-test-rg --template-file .\infra-appsvc\main.bicep --parameters .\infra-appsvc\main.bicepparam

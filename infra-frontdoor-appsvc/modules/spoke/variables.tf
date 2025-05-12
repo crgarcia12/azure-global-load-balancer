@@ -1,6 +1,10 @@
 ################################
 #         Generics
 ################################
+variable "cost_reduction" {
+  description = "Set to true to reduce costs by not deploying expensive resources"
+  type        = bool
+}
 
 variable "prefix" {
   description = "prefix"
@@ -15,18 +19,6 @@ variable "location" {
 variable "ip_second_octet" {
   description = "The second octet of the IP: 10.XXX.0.0/16"
   type        = string
-}
-
-variable "aks_network_plugin_mode" {
-  description = "network plugin mode"
-  type        = string
-  default     = "Overlay"
-}
-
-variable "aks_ebpf_data_plane" {
-  description = "ebpf_data_plane"
-  type        = string
-  default     = "cilium"
 }
 
 variable "ssh_username" {
@@ -56,9 +48,4 @@ variable "hub_rg_name" {
 
 variable "fw_vip" {
   type = string
-}
-
-variable "privatelink_storageblob_dns_zone_name" {
-  description = "DNS Zone Name"
-  type        = string
 }

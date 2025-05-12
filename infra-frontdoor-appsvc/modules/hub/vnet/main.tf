@@ -60,27 +60,13 @@ resource "azurerm_route_table" "udr" {
   name                          = "${var.prefix}-udr"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  disable_bgp_route_propagation = true
+  disable_bgp_route_propagation = false
 
   route {
-    name                   = "route1"
-    address_prefix         = "6.6.6.6/32"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = var.fw_vip
+    name           = "route1"
+    address_prefix = "10.1.0.0/16"
+    next_hop_type  = "VnetLocal"
   }
-
-  route {
-    name                   = "fwdfirewall"
-    address_prefix         = "10.0.0.0/8"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = var.fw_vip
-  }
-
-  # route {
-  #   name                   = "internet"
-  #   address_prefix         = "0.0.0.0/8"
-  #   next_hop_type          = "Internet"
-  # }
 }
 
 #################################################
@@ -120,49 +106,15 @@ resource "azurerm_subnet_route_table_association" "vms-udr" {
   subnet_id      = azurerm_subnet.vms.id
   route_table_id = azurerm_route_table.udr.id
 }
-////////////    RouteServer    //////////////////
-resource "azurerm_subnet" "RouteServerSubnet" {
-  name                 = "RouteServerSubnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.${var.ip_second_octet}.3.0/24"]
-}
 
-////////////     AKS    /////////////////////
-resource "azurerm_subnet" "aks" {
-  name                 = "aks"
+////////////    Firewall      //////////////////
+resource "azurerm_subnet" "AzureFirewallSubnet" {
+  name                 = "AzureFirewallSubnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.${var.ip_second_octet}.4.0/24"]
 }
 
-resource "azurerm_subnet_network_security_group_association" "aks-nsg" {
-  subnet_id                 = azurerm_subnet.aks.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "azurerm_subnet_route_table_association" "aks-udr" {
-  subnet_id      = azurerm_subnet.aks.id
-  route_table_id = azurerm_route_table.udr.id
-}
-
-////////////     Storage    /////////////////////
-resource "azurerm_subnet" "stor" {
-  name                 = "stor"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.${var.ip_second_octet}.5.0/24"]
-}
-
-resource "azurerm_subnet_network_security_group_association" "stor-nsg" {
-  subnet_id                 = azurerm_subnet.stor.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "azurerm_subnet_route_table_association" "stor-udr" {
-  subnet_id      = azurerm_subnet.stor.id
-  route_table_id = azurerm_route_table.udr.id
-}
 #################################################
 #      VNET
 #################################################
@@ -176,25 +128,4 @@ resource "azurerm_virtual_network" "vnet" {
   tags = {
     environment = var.location
   }
-}
-
-resource "azurerm_virtual_network_peering" "spoke-hub" {
-  name                      = "spoke2hub"
-  resource_group_name       = var.resource_group_name
-  virtual_network_name      = local.vnet_name
-  remote_virtual_network_id = var.hub_vnet_id
-  use_remote_gateways       = true
-
-  depends_on = [
-    azurerm_virtual_network.vnet,
-    azurerm_virtual_network_peering.hub-spoke
-  ]
-}
-
-resource "azurerm_virtual_network_peering" "hub-spoke" {
-  name                      = "hub2spoke-${var.prefix}"
-  resource_group_name       = var.hub_vnet_rg_name
-  virtual_network_name      = var.hub_vnet_name
-  remote_virtual_network_id = azurerm_virtual_network.vnet.id
-  allow_gateway_transit     = true
 }

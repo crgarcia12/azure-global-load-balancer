@@ -49,25 +49,4 @@ resource "azurerm_firewall_network_rule_collection" "any-to-any-test" {
       "Any"
     ]
   }
-
-  
-  rule {
-    name = "allowall"
-
-    source_addresses = [
-      "*"
-    ]
-
-    destination_ports = [
-      "*",
-    ]
-
-    destination_addresses = [
-      "*"
-    ]
-
-    protocols = [
-      "Any"
-    ]
-  }
 }

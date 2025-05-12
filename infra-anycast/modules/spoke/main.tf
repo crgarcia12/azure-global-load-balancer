@@ -36,3 +36,13 @@ module "spoke_vm" {
 #   network_plugin_mode = var.aks_network_plugin_mode
 #   ebpf_data_plane     = var.aks_ebpf_data_plane
 # }
+
+module "storage" {
+  source                                = "./storage"
+  prefix                                = var.prefix
+  location                              = var.location
+  resource_group_name                   = azurerm_resource_group.spoke_rg.name
+  subnet_id                             = module.spoke_vnet.vnet_stor_subnet_id
+  privatelink_storageblob_dns_zone_name = var.privatelink_storageblob_dns_zone_name
+  storage_dns_zone_rg                   = var.hub_rg_name
+}

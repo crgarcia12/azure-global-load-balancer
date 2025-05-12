@@ -67,6 +67,25 @@ resource "azurerm_route_table" "udr" {
     address_prefix = "10.1.0.0/16"
     next_hop_type  = "VnetLocal"
   }
+
+  route {
+    name                   = "weu-eus"
+    address_prefix         = "10.222.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.222.4.4"
+  }
+  route {
+    name                   = "eus-weu"
+    address_prefix         = "10.111.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.111.4.4"
+  }
+
+  route {
+    name           = "internet"
+    address_prefix = "0.0.0.0/0"
+    next_hop_type  = "Internet"
+  }
 }
 
 #################################################
@@ -122,6 +141,12 @@ resource "azurerm_subnet" "AzureFirewallSubnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.${var.ip_second_octet}.4.0/24"]
 }
+
+resource "azurerm_subnet_route_table_association" "fwl-udr" {
+  subnet_id      = azurerm_subnet.AzureFirewallSubnet.id
+  route_table_id = azurerm_route_table.udr.id
+}
+
 
 #################################################
 #      VNET
