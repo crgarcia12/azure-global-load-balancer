@@ -60,7 +60,7 @@ resource "azurerm_route_table" "udr" {
   name                          = "${var.prefix}-udr"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  disable_bgp_route_propagation = false
+  bgp_route_propagation_enabled = true
 
   route {
     name           = "route1"
@@ -74,10 +74,11 @@ resource "azurerm_route_table" "udr" {
 #################################################
 /////////////    Default    /////////////////////
 resource "azurerm_subnet" "default" {
-  name                 = "default"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.${var.ip_second_octet}.1.0/24"]
+  name                              = "default"
+  resource_group_name               = var.resource_group_name
+  virtual_network_name              = azurerm_virtual_network.vnet.name
+  address_prefixes                  = ["10.${var.ip_second_octet}.1.0/24"]
+  private_endpoint_network_policies = "Enabled"
 }
 
 resource "azurerm_subnet_network_security_group_association" "default-nsg" {
@@ -109,19 +110,31 @@ resource "azurerm_subnet_route_table_association" "vms-udr" {
 
 ////////////    RouteServer    //////////////////
 resource "azurerm_subnet" "RouteServerSubnet" {
-  name                 = "RouteServerSubnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.${var.ip_second_octet}.3.0/24"]
+  name                              = "RouteServerSubnet"
+  resource_group_name               = var.resource_group_name
+  virtual_network_name              = azurerm_virtual_network.vnet.name
+  address_prefixes                  = ["10.${var.ip_second_octet}.3.0/24"]
+  private_endpoint_network_policies = "Enabled"
 }
 
 ////////////    Firewall      //////////////////
 resource "azurerm_subnet" "AzureFirewallSubnet" {
-  name                 = "AzureFirewallSubnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.${var.ip_second_octet}.4.0/24"]
+  name                              = "AzureFirewallSubnet"
+  resource_group_name               = var.resource_group_name
+  virtual_network_name              = azurerm_virtual_network.vnet.name
+  address_prefixes                  = ["10.${var.ip_second_octet}.4.0/24"]
+  private_endpoint_network_policies = "Enabled"
 }
+
+////////////    Bastion      //////////////////
+resource "azurerm_subnet" "BastionSubnet" {
+  name                              = "AzureBastionSubnet"
+  resource_group_name               = var.resource_group_name
+  virtual_network_name              = azurerm_virtual_network.vnet.name
+  address_prefixes                  = ["10.${var.ip_second_octet}.5.0/24"]
+  private_endpoint_network_policies = "Enabled"
+}
+
 
 #################################################
 #      VNET

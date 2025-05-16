@@ -2,11 +2,17 @@ variable "prefix" {
   type    = string
   default = "crgar-fd"
 }
-variable "SSH_USERNAME" {
+variable "ssh_username" {
   type      = string
   sensitive = true
 }
-variable "SSH_PASSWORD" {
+variable "ssh_password" {
   type      = string
   sensitive = true
+}
+
+variable "vm_sku" {
+  description = "VM SKU"
+  type        = string
+  default = "Standard_D4_v5"
 }

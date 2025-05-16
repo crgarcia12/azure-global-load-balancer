@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "spoke_rg" {
   name     = "${var.prefix}-rg"
-  location = "westeurope"
+  location = var.location
 }
 
 module "spoke_vnet" {
@@ -23,16 +23,16 @@ module "spoke_vm" {
   subnet_id           = module.spoke_vnet.vnet_vm_subnet_id
   ssh_username        = var.ssh_username
   ssh_password        = var.ssh_password
+  vm_sku              = var.vm_sku
 }
 
 # [COST] 
-# module "aks" {
-#   source              = "./aks"
-#   prefix              = var.prefix
-#   location            = var.location
-#   resource_group_name = azurerm_resource_group.spoke_rg.name
-#   resource_group_id   = azurerm_resource_group.spoke_rg.id
-#   subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
-#   network_plugin_mode = var.aks_network_plugin_mode
-#   ebpf_data_plane     = var.aks_ebpf_data_plane
-# }
+module "aks" {
+  source              = "./aks"
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.spoke_rg.name
+  resource_group_id   = azurerm_resource_group.spoke_rg.id
+  subnet_id           = module.spoke_vnet.vnet_aks_subnet_id
+  vm_sku              = var.vm_sku
+}

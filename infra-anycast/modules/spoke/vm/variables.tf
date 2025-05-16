@@ -35,3 +35,8 @@ variable "ssh_password" {
   type      = string
   sensitive = true
 }
+
+variable "vm_sku" {
+  description = "VM SKU"
+  type        = string
+}

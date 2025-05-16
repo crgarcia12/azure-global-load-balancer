@@ -15,12 +15,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                  = var.location
   resource_group_name       = var.resource_group_name
   dns_prefix                = "${var.prefix}-aks"
-  automatic_channel_upgrade = "stable"
+  automatic_upgrade_channel = "stable"
 
   default_node_pool {
     name           = "default"
     node_count     = 1
-    vm_size        = "Standard_D2_v2"
+    vm_size        = var.vm_sku
     vnet_subnet_id = var.subnet_id
   }
 
@@ -32,14 +32,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   azure_active_directory_role_based_access_control {
-    managed                = true
+    azure_rbac_enabled     = true
     admin_group_object_ids = ["10459d9f-98d8-48e0-b3fb-4f0b92a85ba4"]
   }
 
   network_profile {
     network_plugin      = "azure"
-    network_plugin_mode = var.network_plugin_mode
-    ebpf_data_plane     = var.ebpf_data_plane
+    network_data_plane  = "cilium"
+    network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
   }
 

@@ -54,7 +54,7 @@ provider "azurerm" {
 module "hub_weu" {
   source          = "./modules/hub"
   prefix          = "${var.prefix}-weu-hub"
-  location        = "westeurope"
+  location        = "swedencentral"
   ip_second_octet = "111"
   ssh_username    = var.SSH_USERNAME
   ssh_password    = var.SSH_PASSWORD
@@ -66,7 +66,7 @@ module "hub_weu" {
 module "spoke_weu_s1" {
   source                  = "./modules/spoke"
   prefix                  = "${var.prefix}-weu-s1"
-  location                = "westeurope"
+  location                = "swedencentral"
   ip_second_octet         = "113"
   hub_vnet_name           = module.hub_weu.hub_vnet_name
   hub_vnet_id             = module.hub_weu.hub_vnet_id
@@ -74,8 +74,8 @@ module "spoke_weu_s1" {
   aks_network_plugin_mode = null
   aks_ebpf_data_plane     = null
   fw_vip                  = module.hub_weu.fw_vip
-  ssh_username            = var.SSH_USERNAME
-  ssh_password            = var.SSH_PASSWORD
+  ssh_username            = var.ssh_username
+  ssh_password            = var.ssh_password
 
   depends_on = [
     module.hub_weu
@@ -84,7 +84,7 @@ module "spoke_weu_s1" {
 
 resource "azurerm_resource_group" "frontdoor_rg" {
   name     = "${var.prefix}-front_door_rg"
-  location = "westeurope"
+  location = "swedencentral"
 }
 
 module "frontfoor" {

@@ -17,18 +17,6 @@ variable "ip_second_octet" {
   type        = string
 }
 
-variable "aks_network_plugin_mode" {
-  description = "network plugin mode"
-  type        = string
-  default     = "Overlay"
-}
-
-variable "aks_ebpf_data_plane" {
-  description = "ebpf_data_plane"
-  type        = string
-  default     = "cilium"
-}
-
 variable "ssh_username" {
   type      = string
   sensitive = true
@@ -37,6 +25,11 @@ variable "ssh_username" {
 variable "ssh_password" {
   type      = string
   sensitive = true
+}
+
+variable "vm_sku" {
+  description = "VM SKU"
+  type        = string
 }
 
 ################################

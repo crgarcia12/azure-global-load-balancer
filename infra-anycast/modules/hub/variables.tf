@@ -25,3 +25,13 @@ variable "ssh_password" {
   type      = string
   sensitive = true
 }
+
+variable "vm_sku" {
+  description = "VM SKU"
+  type        = string
+}
+
+variable "deploy_bastion" {
+  description = "Deploy Bastion"
+  type        = bool
+}

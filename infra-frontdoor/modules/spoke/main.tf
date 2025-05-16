@@ -3,7 +3,7 @@ locals {
 }
 resource "azurerm_resource_group" "spoke_rg" {
   name     = local.resource_group_name
-  location = "westeurope"
+  location = "swedencentral"
 }
 
 module "spoke_vnet" {

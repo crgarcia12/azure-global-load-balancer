@@ -27,12 +27,7 @@ variable "subnet_id" {
   type        = string
 }
 
-variable "network_plugin_mode" {
-  description = "network plugin mode"
-  type        = string
-}
-
-variable "ebpf_data_plane" {
-  description = "ebpf_data_plane"
+variable "vm_sku" {
+  description = "VM SKU"
   type        = string
 }

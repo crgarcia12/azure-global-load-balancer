@@ -11,10 +11,10 @@ resource "azurerm_public_ip" "vm_ip" {
 }
 
 resource "azurerm_network_interface" "vm_nic" {
-  name                 = "${var.prefix}-vm-nic"
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  enable_ip_forwarding = true
+  name                  = "${var.prefix}-vm-nic"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  ip_forwarding_enabled = true
 
   ip_configuration {
     name                          = "${var.prefix}-ip"
@@ -29,15 +29,16 @@ resource "azurerm_virtual_machine" "vm" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.vm_nic.id]
-  vm_size               = "Standard_D4s_v3"
+  vm_size               = var.vm_sku
 
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
+  # az vm image list-publishers --location westus --output table
   storage_image_reference {
-    publisher = "OpenLogic"
-    offer     = "CentOS"
-    sku       = "8_5-gen2"
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
     version   = "latest"
   }
 

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.37.0"
+      version = "4.28.0"
     }
   }
   backend "azurerm" {
@@ -14,78 +14,82 @@ terraform {
 }
 provider "azurerm" {
   features {}
+  subscription_id = var.SUBSCRIPTION_ID
 }
 
 locals {
-  weu_hub_ars_bgp_peer_asn = 65111
-  eus_hub_ars_bgp_peer_asn = 65222
+  swe_hub_ars_bgp_peer_asn = 65111
+  wus_hub_ars_bgp_peer_asn = 65222
 }
 
 #################################
-#           hub-eus
+#           hub-WUS
 #################################
-module "hub-eus" {
+module "hub-wus" {
   source          = "./modules/hub"
-  prefix          = "${var.prefix}-eus-hub"
-  location        = "eastus"
+  prefix          = "${var.prefix}-wus-hub"
+  location        = "westus"
   ip_second_octet = "222"
   ssh_username    = var.SSH_USERNAME
   ssh_password    = var.SSH_PASSWORD
+  vm_sku          = var.vm_sku
+  deploy_bastion   = false
 }
 
 #################################
-#           Spoke-EUS
+#           Spoke-WUS
 #################################
-module "spoke_eus_s1" {
-  source          = "./modules/spoke"
-  prefix          = "${var.prefix}-eus-s1"
-  location        = "eastus"
-  ip_second_octet = "223"
-  hub_vnet_name   = module.hub-eus.hub_vnet_name
-  hub_vnet_id     = module.hub-eus.hub_vnet_id
-  hub_rg_name     = module.hub-eus.hub_rg_name
-  ssh_username    = var.SSH_USERNAME
-  ssh_password    = var.SSH_PASSWORD
-  # [COST]  
-  # fw_vip          = module.hub-eus.fw_vip
+# module "spoke_wus_s1" {
+#   source          = "./modules/spoke"
+#   prefix          = "${var.prefix}-wus-s1"
+#   location        = "westus"
+#   ip_second_octet = "223"
+#   hub_vnet_name   = module.hub-wus.hub_vnet_name
+#   hub_vnet_id     = module.hub-wus.hub_vnet_id
+#   hub_rg_name     = module.hub-wus.hub_rg_name
+#   ssh_username    = var.SSH_USERNAME
+#   ssh_password    = var.SSH_PASSWORD
+#   vm_sku = var.vm_sku
+#   # [COST]  
+#   fw_vip          = module.hub-wus.fw_vip
 
-  depends_on = [
-    module.hub-eus
-  ]
-}
+#   depends_on = [
+#     module.hub-wus
+#   ]
+# }
 
 #################################
-#           Hub-WEU
+#           Hub-SWE
 #################################
-module "hub_weu" {
+module "hub_swe" {
   source          = "./modules/hub"
-  prefix          = "${var.prefix}-weu-hub"
-  location        = "westeurope"
+  prefix          = "${var.prefix}-swe-hub"
+  location        = "swedencentral"
   ip_second_octet = "111"
   ssh_username    = var.SSH_USERNAME
   ssh_password    = var.SSH_PASSWORD
+  vm_sku          = var.vm_sku
+  deploy_bastion = true
 }
 
 #################################
-#           Spokes-WEU
+#           Spokes-SWE
 #################################
-module "spoke_weu_s1" {
-  source                  = "./modules/spoke"
-  prefix                  = "${var.prefix}-weu-s1"
-  location                = "westeurope"
-  ip_second_octet         = "113"
-  hub_vnet_name           = module.hub_weu.hub_vnet_name
-  hub_vnet_id             = module.hub_weu.hub_vnet_id
-  hub_rg_name             = module.hub_weu.hub_rg_name
-  aks_network_plugin_mode = null
-  aks_ebpf_data_plane     = null
+module "spoke_swe_s1" {
+  source          = "./modules/spoke"
+  prefix          = "${var.prefix}-swe-s1"
+  location        = "swedencentral"
+  ip_second_octet = "113"
+  hub_vnet_name   = module.hub_swe.hub_vnet_name
+  hub_vnet_id     = module.hub_swe.hub_vnet_id
+  hub_rg_name     = module.hub_swe.hub_rg_name
   # [COST]  
-  # fw_vip                  = module.hub_weu.fw_vip
+  fw_vip       = module.hub_swe.fw_vip
   ssh_username = var.SSH_USERNAME
   ssh_password = var.SSH_PASSWORD
-
+  vm_sku       = var.vm_sku
   depends_on = [
-    module.hub_weu
+    module.hub_swe
   ]
 }
 
@@ -93,50 +97,50 @@ module "spoke_weu_s1" {
 #      BGP Configurations
 #################################
 # [COST]  
-# resource "azurerm_route_server_bgp_connection" "vm_eus_eus_bgpconnection" {
-#   name            = "${var.prefix}-eus-hub-vm-bgpconnection"
-#   route_server_id = module.hub-eus.hub_ars_id
-#   peer_asn        = local.eus_hub_ars_bgp_peer_asn
-#   peer_ip         = module.hub-eus.vm_private_ip_address
-# }
+resource "azurerm_route_server_bgp_connection" "vm_wus_wus_bgpconnection" {
+  name            = "${var.prefix}-wus-hub-vm-bgpconnection"
+  route_server_id = module.hub-wus.hub_ars_id
+  peer_asn        = local.wus_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub-wus.vm_private_ip_address
+}
 
-# resource "azurerm_route_server_bgp_connection" "vm_eus_weu_bgpconnection" {
-#   name            = "${var.prefix}-eus-hub-vm-bgpconnection"
-#   route_server_id = module.hub_weu.hub_ars_id
-#   peer_asn        = local.eus_hub_ars_bgp_peer_asn
-#   peer_ip         = module.hub-eus.vm_private_ip_address
-# }
+resource "azurerm_route_server_bgp_connection" "vm_wus_swe_bgpconnection" {
+  name            = "${var.prefix}-swe-hub-vm-bgpconnection"
+  route_server_id = module.hub_swe.hub_ars_id
+  peer_asn        = local.wus_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub-wus.vm_private_ip_address
+}
 
 
-# resource "azurerm_route_server_bgp_connection" "vm_weu_eus_bgpconnection" {
-#   name            = "${var.prefix}-weu-hub-vm-bgpconnection"
-#   route_server_id = module.hub-eus.hub_ars_id
-#   peer_asn        = local.weu_hub_ars_bgp_peer_asn
-#   peer_ip         = module.hub_weu.vm_private_ip_address
-# }
+resource "azurerm_route_server_bgp_connection" "vm_swe_wus_bgpconnection" {
+  name            = "${var.prefix}-weu-hub-vm-bgpconnection"
+  route_server_id = module.hub-wus.hub_ars_id
+  peer_asn        = local.swe_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub_swe.vm_private_ip_address
+}
 
-# resource "azurerm_route_server_bgp_connection" "vm_weu_weu_bgpconnection" {
-#   name            = "${var.prefix}-weu-hub-vm-bgpconnection"
-#   route_server_id = module.hub_weu.hub_ars_id
-#   peer_asn        = local.weu_hub_ars_bgp_peer_asn
-#   peer_ip         = module.hub_weu.vm_private_ip_address
-# }
+resource "azurerm_route_server_bgp_connection" "vm_swe_swe_bgpconnection" {
+  name            = "${var.prefix}-weu-hub-vm-bgpconnection"
+  route_server_id = module.hub_swe.hub_ars_id
+  peer_asn        = local.swe_hub_ars_bgp_peer_asn
+  peer_ip         = module.hub_swe.vm_private_ip_address
+}
 
 
 #################################
 #           Hub Peerings
 #################################
 
-resource "azurerm_virtual_network_peering" "hub-hubweu" {
-  name                      = "hub-hubweu"
-  resource_group_name       = module.hub-eus.hub_rg_name
-  virtual_network_name      = module.hub-eus.hub_vnet_name
-  remote_virtual_network_id = module.hub_weu.hub_vnet_id
+resource "azurerm_virtual_network_peering" "hub-hubswe" {
+  name                      = "hub-hubswe"
+  resource_group_name       = module.hub-wus.hub_rg_name
+  virtual_network_name      = module.hub-wus.hub_vnet_name
+  remote_virtual_network_id = module.hub_swe.hub_vnet_id
 }
 
-resource "azurerm_virtual_network_peering" "hubweu-hub" {
-  name                      = "hubweu-hub"
-  resource_group_name       = module.hub_weu.hub_rg_name
-  virtual_network_name      = module.hub_weu.hub_vnet_name
-  remote_virtual_network_id = module.hub-eus.hub_vnet_id
+resource "azurerm_virtual_network_peering" "hubswe-hub" {
+  name                      = "hubswe-hub"
+  resource_group_name       = module.hub_swe.hub_rg_name
+  virtual_network_name      = module.hub_swe.hub_vnet_name
+  remote_virtual_network_id = module.hub-wus.hub_vnet_id
 }

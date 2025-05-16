@@ -10,6 +10,10 @@ output "vnet_fw_subnet_id" {
   value = azurerm_subnet.AzureFirewallSubnet.id
 }
 
+output "vnet_bastion_subnet_id" {
+  value = azurerm_subnet.BastionSubnet.id
+}
+
 output "vnet_id" {
   value = azurerm_virtual_network.vnet.id
 }

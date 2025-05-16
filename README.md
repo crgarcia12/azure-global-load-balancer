@@ -21,6 +21,10 @@ Currently, it is under development
 
 ## Run terraform
 ```
+# Check available vms
+az vm list-skus --location eastus --size Standard_D --all --output table
+az vm list-skus --location swedencentral --size Standard_D --all --output table
+
 # Set secrets via environment variables
 $env:TF_VAR_SSH_USERNAME=<username>
 $env:TF_VAR_SSH_PASSWORD=<password>
